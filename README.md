@@ -4,13 +4,13 @@
 
 Welcome to my personal portfolio. This website presents my profile, technical skills, education, projects, and professional experience as a Full-Stack Developer.
 
-## ✨ About
+### ✨ About
 
 I'm a Full-Stack Developer passionate about building modern web and mobile applications.
 
 I enjoy turning ideas into functional digital solutions, from designing clean user interfaces to developing reliable backend systems and integrating APIs.
 
-## 📂 Portfolio Sections
+### 📂 Portfolio Sections
 
 The portfolio includes:
 
@@ -22,7 +22,7 @@ The portfolio includes:
 • Projects — Selected development projects
 • Contact — Email, phone and location
 
-## 🎨 Design
+### 🎨 Design
 
 Built with React.js and Tailwind CSS, with a modern and professional interface featuring:
 
@@ -33,7 +33,7 @@ Built with React.js and Tailwind CSS, with a modern and professional interface f
 • Interactive components
 • Mobile-friendly layout
 
-## 👩‍💻 Author
+### 👩‍💻 Author
 
  Chayma Mighri
 
