@@ -1,6 +1,6 @@
-### Chayma Mighri — Personal Portfolio
+# Chayma Mighri — Personal Portfolio
 
-# Full-Stack Developer · Web & Mobile Development
+###  Full-Stack Developer · Web & Mobile Development
 
 Welcome to my personal portfolio. This website presents my profile, technical skills, education, projects, and professional experience as a Full-Stack Developer.
 
