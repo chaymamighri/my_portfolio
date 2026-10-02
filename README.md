@@ -1,16 +1,40 @@
-# React + Vite
+### Chayma Mighri — Personal Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Full-Stack Developer · Web & Mobile Development
 
-Currently, two official plugins are available:
+Welcome to my personal portfolio. This website presents my profile, technical skills, education, projects, and professional experience as a Full-Stack Developer.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## ✨ About
 
-## React Compiler
+I'm a Full-Stack Developer passionate about building modern web and mobile applications.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+I enjoy turning ideas into functional digital solutions, from designing clean user interfaces to developing reliable backend systems and integrating APIs.
 
-## Expanding the ESLint configuration
+## 📂 Portfolio Sections
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+The portfolio includes:
+
+• Home — Introduction and profile
+• About — Personal and professional background
+• Skills — Technical skills and technologies
+• Education — Academic background
+• Experience — Professional experience
+• Projects — Selected development projects
+• Contact — Email, phone and location
+
+## 🎨 Design
+
+Built with React.js and Tailwind CSS, with a modern and professional interface featuring:
+
+• Responsive design
+• Dark mode
+• Green / teal gradient visual identity
+• Smooth animations
+• Interactive components
+• Mobile-friendly layout
+
+## 👩‍💻 Author
+
+ Chayma Mighri
+
+Full-Stack Developer · Web & Mobile Development
