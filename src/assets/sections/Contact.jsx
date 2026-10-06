@@ -4,7 +4,7 @@ import SectionTitle from "../components/SectionTitle";
 
 export default function Contact() {
   const email = "chaymamighri942@gmail.com";
-  const phone = "+216 42 316 275"; 
+  const phone = "+216 42 316 275";
 
   return (
     <section
@@ -23,7 +23,7 @@ export default function Contact() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mx-auto max-w-4xl overflow-hidden rounded-[2rem] bg-slate-900 p-8 shadow-2xl md:p-12 dark:bg-slate-900"
+          className="mx-auto max-w-4xl overflow-hidden rounded-[2rem] bg-slate-900 p-8 shadow-2xl md:p-12"
         >
           <div className="grid gap-10 md:grid-cols-2 md:items-center">
             {/* Left content */}
@@ -50,10 +50,7 @@ export default function Contact() {
                 className="group flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 p-4 text-white transition-all duration-300 hover:-translate-y-1 hover:bg-white/10"
               >
                 <span className="flex items-center gap-3">
-                  <Mail
-                    size={20}
-                    className="text-emerald-400"
-                  />
+                  <Mail size={20} className="text-emerald-400" />
 
                   <span className="text-sm md:text-base">
                     {email}
@@ -72,10 +69,7 @@ export default function Contact() {
                 className="group flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 p-4 text-white transition-all duration-300 hover:-translate-y-1 hover:bg-white/10"
               >
                 <span className="flex items-center gap-3">
-                  <Phone
-                    size={20}
-                    className="text-emerald-400"
-                  />
+                  <Phone size={20} className="text-emerald-400" />
 
                   <span className="text-sm md:text-base">
                     {phone}
@@ -90,10 +84,7 @@ export default function Contact() {
 
               {/* Location */}
               <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 text-slate-300">
-                <MapPin
-                  size={20}
-                  className="text-emerald-400"
-                />
+                <MapPin size={20} className="text-emerald-400" />
 
                 Tunisia
               </div>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { Download, Menu, X } from "lucide-react";
-import { motion } from "motion/react";
 import ThemeToggle from "./ThemeToggle";
 
 const links = [
@@ -18,15 +18,14 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  // Détecter le scroll
+  // Détecter le défilement de la page
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
 
     handleScroll();
-
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -36,92 +35,126 @@ export default function Navbar() {
   // Détecter la section visible
   useEffect(() => {
     const sections = links
-      .map((link) => document.getElementById(link.id))
+      .map(({ id }) => document.getElementById(id))
       .filter(Boolean);
 
-    if (sections.length === 0) {
-      return;
-    }
+    if (!sections.length) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         const visibleEntries = entries
           .filter((entry) => entry.isIntersecting)
-          .sort(
-            (a, b) => b.intersectionRatio - a.intersectionRatio
-          );
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
 
         if (visibleEntries.length > 0) {
           setActiveSection(visibleEntries[0].target.id);
         }
       },
       {
-        rootMargin: "-20% 0px -60% 0px",
-        threshold: [0.1, 0.25, 0.5, 0.75],
+        rootMargin: "-15% 0px -65% 0px",
+        threshold: [0, 0.1, 0.25, 0.5],
       }
     );
 
-    sections.forEach((section) => {
-      observer.observe(section);
-    });
+    sections.forEach((section) => observer.observe(section));
 
-    return () => {
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, []);
 
-  // Navigation vers une section
+  // Fermer le menu avec la touche Échap + bloquer le scroll du body
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setMobileOpen(false);
+      }
+    };
+
+    // Bloquer le scroll du body quand le menu est ouvert
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [mobileOpen]);
+
+  // Navigation commune
   const handleNavigation = (id) => {
+    setMobileOpen(false);
+
     const section = document.getElementById(id);
 
-    if (section) {
-      section.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+    if (!section) {
+      console.warn(`Section not found: #${id}`);
+      return;
     }
 
     setActiveSection(id);
-    setMobileOpen(false);
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        section.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      });
+    });
   };
+
+  const linkClass = (isActive) =>
+    `relative rounded-xl px-4 py-3 text-left text-sm font-medium
+    transition-colors duration-200 ${
+      isActive
+        ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400"
+        : "text-slate-600 hover:bg-slate-50 hover:text-emerald-600 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-emerald-400"
+    }`;
 
   return (
     <motion.header
-      initial={{ y: -100 }}
+      initial={{ y: -80 }}
       animate={{ y: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.4 }}
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         scrolled
           ? "border-b border-slate-200/70 bg-white/90 shadow-sm backdrop-blur-xl dark:border-slate-800/70 dark:bg-slate-950/90"
-          : "bg-white/70 backdrop-blur-md dark:bg-slate-950/70"
+          : "bg-white/80 backdrop-blur-md dark:bg-slate-950/80"
       }`}
     >
       <div className="container-custom">
         <div className="flex h-20 items-center justify-between">
-
           {/* Logo */}
           <button
             type="button"
             onClick={() => handleNavigation("home")}
-            className="group flex items-center text-[22px] font-bold tracking-[-0.03em] text-slate-900 dark:text-white"
+            className="group flex items-center text-[22px] font-bold tracking-tight text-slate-900 dark:text-white"
             aria-label="Go to home"
           >
-          <span>Chayma</span>
-<span className="ml-1 font-light text-slate-500 dark:text-slate-500">
-  Mighri
-</span>
+            <span>Chayma</span>
+            <span className="ml-1 font-light text-slate-500">Mighri</span>
 
-<motion.span
-  whileHover={{ scale: 1.3, rotate: 180 }}
-  transition={{ type: "spring", stiffness: 400, damping: 15 }}
-  className="gradient-text ml-1.5"
->
-  ✧
-</motion.span>
+            <motion.span
+              whileHover={{ scale: 1.3, rotate: 180 }}
+              transition={{
+                type: "spring",
+                stiffness: 400,
+                damping: 15,
+              }}
+              className="gradient-text ml-1.5"
+            >
+              ✧
+            </motion.span>
           </button>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden items-center gap-1 lg:flex">
+          {/* Navigation desktop */}
+          <nav
+            aria-label="Main navigation"
+            className="hidden items-center gap-1 lg:flex"
+          >
             {links.map((link) => {
               const isActive = activeSection === link.id;
 
@@ -130,7 +163,8 @@ export default function Navbar() {
                   key={link.id}
                   type="button"
                   onClick={() => handleNavigation(link.id)}
-                  className={`relative px-4 py-2.5 text-sm font-medium transition-colors duration-300 ${
+                  aria-current={isActive ? "location" : undefined}
+                  className={`relative px-3 py-2.5 text-sm font-medium transition-colors duration-300 ${
                     isActive
                       ? "text-emerald-600 dark:text-emerald-400"
                       : "text-slate-600 hover:text-emerald-600 dark:text-slate-300 dark:hover:text-emerald-400"
@@ -154,7 +188,7 @@ export default function Navbar() {
             })}
           </nav>
 
-          {/* Desktop Actions */}
+          {/* Actions desktop */}
           <div className="hidden items-center gap-3 lg:flex">
             <ThemeToggle />
 
@@ -168,10 +202,10 @@ export default function Navbar() {
             </a>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Bouton menu mobile */}
           <button
             type="button"
-            onClick={() => setMobileOpen((prev) => !prev)}
+            onClick={() => setMobileOpen((open) => !open)}
             className="rounded-xl border border-slate-200 p-2.5 text-slate-700 transition hover:border-emerald-300 hover:text-emerald-600 dark:border-slate-700 dark:text-slate-300 dark:hover:border-emerald-500 dark:hover:text-emerald-400 lg:hidden"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
@@ -182,61 +216,80 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
-      <motion.div
-        id="mobile-navigation"
-        initial={false}
-        animate={{
-          height: mobileOpen ? "auto" : 0,
-          opacity: mobileOpen ? 1 : 0,
-        }}
-        transition={{ duration: 0.25 }}
-        className="overflow-hidden border-t border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950 lg:hidden"
-      >
-        <nav className="container-custom flex flex-col py-4">
-          {links.map((link) => {
-            const isActive = activeSection === link.id;
+      {/* Navigation mobile */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <>
+            {/* Fond cliquable — opacité renforcée pour meilleure lisibilité */}
+            <motion.button
+              key="mobile-backdrop"
+              type="button"
+              aria-label="Close navigation menu"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.18 }}
+              onClick={() => setMobileOpen(false)}
+              className="fixed inset-0 top-20 z-40 bg-slate-950/50 backdrop-blur-sm lg:hidden"
+            />
 
-            return (
-              <button
-                key={link.id}
-                type="button"
-                onClick={() => handleNavigation(link.id)}
-                className={`relative rounded-xl px-4 py-3 text-left text-sm font-medium transition-all duration-300 ${
-                  isActive
-                    ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400"
-                    : "text-slate-600 hover:bg-slate-50 hover:text-emerald-600 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-emerald-400"
-                }`}
+            <motion.div
+              key="mobile-panel"
+              id="mobile-navigation"
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2 }}
+              className="absolute inset-x-0 top-full z-50 max-h-[calc(100dvh-5rem)] overflow-y-auto border-t border-slate-200 bg-white shadow-xl dark:border-slate-800 dark:bg-slate-950 lg:hidden"
+            >
+              <nav
+                aria-label="Mobile navigation"
+                className="container-custom flex flex-col gap-1 py-4"
               >
-                {link.label}
+                {links.map((link) => {
+                  const isActive = activeSection === link.id;
 
-                {isActive && (
-                  <span className="absolute left-1 top-1/2 h-5 w-1 -translate-y-1/2 rounded-full bg-emerald-500" />
-                )}
-              </button>
-            );
-          })}
+                  return (
+                    <button
+                      key={link.id}
+                      type="button"
+                      onClick={() => handleNavigation(link.id)}
+                      aria-current={isActive ? "location" : undefined}
+                      className={linkClass(isActive)}
+                    >
+                      {link.label}
 
-          {/* Mobile Theme Toggle */}
-          <div className="mt-3 flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3 dark:bg-slate-900">
-            <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
-              Appearance
-            </span>
+                      {isActive && (
+                        <span className="absolute left-1 top-1/2 h-5 w-1 -translate-y-1/2 rounded-full bg-emerald-500" />
+                      )}
+                    </button>
+                  );
+                })}
 
-            <ThemeToggle />
-          </div>
+                {/* Apparence et thème */}
+                <div className="mt-3 flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3 dark:bg-slate-900">
+                  <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
+                    Appearance
+                  </span>
 
-          {/* Mobile CV */}
-          <a
-            href="/CV-Chayma-Mighri.pdf"
-            download
-            className="mt-3 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-600"
-          >
-            <Download size={16} />
-            Download CV
-          </a>
-        </nav>
-      </motion.div>
+                  <ThemeToggle />
+                </div>
+
+                {/* CV mobile */}
+                <a
+                  href="/CV-Chayma-Mighri.pdf"
+                  download
+                  onClick={() => setMobileOpen(false)}
+                  className="mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-600"
+                >
+                  <Download size={16} />
+                  Download CV
+                </a>
+              </nav>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </motion.header>
   );
 }

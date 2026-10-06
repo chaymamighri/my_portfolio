@@ -22,7 +22,10 @@ const skillGroups = [
 
 export default function Skills() {
   return (
-    <section id="skills" className="section-padding">
+    <section
+      id="skills"
+      className="section-padding bg-slate-50/70 dark:bg-slate-950"
+    >
       <div className="container-custom">
         <SectionTitle
           eyebrow="Skills"
@@ -38,9 +41,9 @@ export default function Skills() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.08 }}
-              className="rounded-3xl border border-slate-200 bg-white p-7 shadow-sm"
+              className="rounded-3xl border border-slate-200 bg-white p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900 dark:hover:shadow-slate-950/50"
             >
-              <h3 className="text-xl font-semibold text-slate-900">
+              <h3 className="text-xl font-semibold text-slate-900 dark:text-white">
                 {group.title}
               </h3>
 
@@ -48,7 +51,7 @@ export default function Skills() {
                 {group.skills.map((skill) => (
                   <span
                     key={skill}
-                    className="rounded-full border border-emerald-100 bg-emerald-50 px-4 py-2 text-sm font-medium text-emerald-700"
+                    className="rounded-full border border-emerald-100 bg-emerald-50 px-4 py-2 text-sm font-medium text-emerald-700 transition-all duration-300 hover:border-emerald-200 hover:bg-emerald-100 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-950/70"
                   >
                     {skill}
                   </span>
