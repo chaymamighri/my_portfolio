@@ -1,53 +1,103 @@
 import { FaGithub, FaLinkedin } from "react-icons/fa";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 
 export default function Footer() {
-  return (
-    <footer className="border-t border-slate-200 bg-white transition-colors duration-300 dark:border-slate-800 dark:bg-slate-950">
-      <div className="container-custom flex flex-col gap-5 py-8 md:flex-row md:items-center md:justify-between">
+  const shouldReduceMotion = useReducedMotion();
 
-        {/* Copyright + nom */}
-        <p className="text-sm text-slate-500 dark:text-slate-400">
+  const socialLinks = [
+    {
+      name: "GitHub",
+      href: "https://github.com/chaymamighri",
+      icon: FaGithub,
+    },
+    {
+      name: "LinkedIn",
+      href: "https://www.linkedin.com/in/chayma-mighri/",
+      icon: FaLinkedin,
+    },
+  ];
+
+  return (
+    <motion.footer
+      initial={
+        shouldReduceMotion
+          ? false
+          : { opacity: 0, y: 12 }
+      }
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: shouldReduceMotion ? 0 : 0.5 }}
+      className="relative overflow-hidden border-t border-slate-200/80 bg-white transition-colors duration-300 dark:border-slate-800 dark:bg-slate-950"
+    >
+      {/* Subtle gradient accent */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-500/60 to-transparent"
+      />
+
+      <div className="container-custom flex flex-col items-center justify-between gap-5 py-7 sm:py-8 md:flex-row">
+
+        {/* Copyright */}
+        <p className="text-center text-sm leading-relaxed text-slate-500 dark:text-slate-400 md:text-left">
           © {new Date().getFullYear()}{" "}
           <span className="font-semibold text-slate-900 dark:text-white">
-            Chayma
-          </span>{" "}
-          <span className="text-slate-900 dark:text-white">
-            Mighri
+            Chayma Mighri
           </span>
+
           <motion.span
-            whileHover={{ scale: 1.3, rotate: 180 }}
-            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+            aria-hidden="true"
+            whileHover={shouldReduceMotion ? undefined : {
+              scale: 1.25,
+              rotate: 90,
+            }}
+            transition={{ type: "spring", stiffness: 350, damping: 15 }}
             className="gradient-text ml-1 inline-block"
           >
             ✧
           </motion.span>
-          {" "}· All rights reserved.
+
+          <span className="mx-1.5 text-slate-300 dark:text-slate-700">
+            |
+          </span>
+
+          <span>All rights reserved.</span>
         </p>
 
         {/* Social links */}
-        <div className="flex items-center gap-3">
-          <a
-            href="https://github.com/chaymamighri"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="GitHub"
-            className="rounded-full border border-slate-200 p-2.5 text-slate-500 transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-300 hover:text-emerald-600 hover:shadow-sm dark:border-slate-700 dark:text-slate-400 dark:hover:border-emerald-500 dark:hover:text-emerald-400"
-          >
-            <FaGithub size={18} />
-          </a>
-
-          <a
-            href="https://linkedin.com/in/chayma-mighri"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="LinkedIn"
-            className="rounded-full border border-slate-200 p-2.5 text-slate-500 transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-300 hover:text-emerald-600 hover:shadow-sm dark:border-slate-700 dark:text-slate-400 dark:hover:border-emerald-500 dark:hover:text-emerald-400"
-          >
-            <FaLinkedin size={18} />
-          </a>
-        </div>
+        <nav
+          aria-label="Social media links"
+          className="flex items-center gap-3"
+        >
+          {socialLinks.map(({ name, href, icon: Icon }) => (
+            <motion.a
+              key={name}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Visit my ${name} profile`}
+              title={name}
+              whileHover={
+                shouldReduceMotion
+                  ? undefined
+                  : { y: -3, scale: 1.04 }
+              }
+              whileTap={
+                shouldReduceMotion
+                  ? undefined
+                  : { scale: 0.96 }
+              }
+              transition={{ duration: 0.2 }}
+              className="group flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-slate-50/80 text-slate-500 shadow-sm transition-colors duration-300 hover:border-emerald-400/60 hover:bg-emerald-50 hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400 dark:hover:border-emerald-500/50 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-400 dark:focus-visible:ring-offset-slate-950"
+            >
+              <Icon
+                size={18}
+                aria-hidden="true"
+                className="transition-transform duration-300 group-hover:scale-105"
+              />
+            </motion.a>
+          ))}
+        </nav>
       </div>
-    </footer>
+    </motion.footer>
   );
 }

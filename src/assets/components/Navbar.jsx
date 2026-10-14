@@ -1,5 +1,10 @@
+
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import {
+  AnimatePresence,
+  motion,
+  useReducedMotion,
+} from "motion/react";
 import { Download, Menu, X } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 
@@ -13,26 +18,33 @@ const links = [
   { label: "Contact", id: "contact" },
 ];
 
+const CV_PATH = "/CV-Chayma-Mighri.pdf";
+
 export default function Navbar() {
   const [activeSection, setActiveSection] = useState("home");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  // Détecter le défilement de la page
+  const shouldReduceMotion = useReducedMotion();
+
+  // Detect page scrolling
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      setScrolled(window.scrollY > 16);
     };
 
     handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    window.addEventListener("scroll", handleScroll, {
+      passive: true,
+    });
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
-  // Détecter la section visible
+  // Detect the currently visible section
   useEffect(() => {
     const sections = links
       .map(({ id }) => document.getElementById(id))
@@ -44,14 +56,17 @@ export default function Navbar() {
       (entries) => {
         const visibleEntries = entries
           .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+          .sort(
+            (a, b) =>
+              b.intersectionRatio - a.intersectionRatio
+          );
 
         if (visibleEntries.length > 0) {
           setActiveSection(visibleEntries[0].target.id);
         }
       },
       {
-        rootMargin: "-15% 0px -65% 0px",
+        rootMargin: "-20% 0px -65% 0px",
         threshold: [0, 0.1, 0.25, 0.5],
       }
     );
@@ -61,7 +76,7 @@ export default function Navbar() {
     return () => observer.disconnect();
   }, []);
 
-  // Fermer le menu avec la touche Échap + bloquer le scroll du body
+  // Close the mobile menu with Escape and lock background scrolling
   useEffect(() => {
     if (!mobileOpen) return;
 
@@ -71,19 +86,33 @@ export default function Navbar() {
       }
     };
 
-    // Bloquer le scroll du body quand le menu est ouvert
     const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
 
+    document.body.style.overflow = "hidden";
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [mobileOpen]);
 
-  // Navigation commune
+  // Close the mobile menu when switching to desktop layout
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setMobileOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  // Navigate to a section
   const handleNavigation = (id) => {
     setMobileOpen(false);
 
@@ -96,64 +125,116 @@ export default function Navbar() {
 
     setActiveSection(id);
 
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        section.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      });
+    const headerOffset = 80;
+    const sectionTop =
+      section.getBoundingClientRect().top + window.scrollY;
+
+    window.scrollTo({
+      top: Math.max(0, sectionTop - headerOffset),
+      behavior: shouldReduceMotion ? "auto" : "smooth",
     });
   };
 
-  const linkClass = (isActive) =>
-    `relative rounded-xl px-4 py-3 text-left text-sm font-medium
-    transition-colors duration-200 ${
+  const headerAnimation = shouldReduceMotion
+    ? {}
+    : {
+        initial: { y: -24, opacity: 0 },
+        animate: { y: 0, opacity: 1 },
+        transition: {
+          duration: 0.45,
+          ease: "easeOut",
+        },
+      };
+
+  const mobilePanelAnimation = shouldReduceMotion
+    ? {
+        initial: { opacity: 1 },
+        animate: { opacity: 1 },
+        exit: { opacity: 1 },
+        transition: { duration: 0 },
+      }
+    : {
+        initial: { opacity: 0, y: -8 },
+        animate: { opacity: 1, y: 0 },
+        exit: { opacity: 0, y: -8 },
+        transition: { duration: 0.2, ease: "easeOut" },
+      };
+
+  const getLinkClass = (isActive) =>
+    [
+      "relative rounded-lg px-3 py-2 text-sm font-medium",
+      "transition-colors duration-200",
+      "focus-visible:outline-none focus-visible:ring-2",
+      "focus-visible:ring-emerald-500 focus-visible:ring-offset-2",
+      "dark:focus-visible:ring-offset-slate-950",
       isActive
-        ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400"
-        : "text-slate-600 hover:bg-slate-50 hover:text-emerald-600 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-emerald-400"
-    }`;
+        ? "text-emerald-700 dark:text-emerald-400"
+        : "text-slate-600 hover:text-emerald-700 dark:text-slate-300 dark:hover:text-emerald-400",
+    ].join(" ");
+
+  const mobileLinkClass = (isActive) =>
+    [
+      "relative w-full rounded-xl px-4 py-3 text-left text-sm font-medium",
+      "transition-colors duration-200",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500",
+      isActive
+        ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400"
+        : "text-slate-600 hover:bg-slate-50 hover:text-emerald-700 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-emerald-400",
+    ].join(" ");
 
   return (
     <motion.header
-      initial={{ y: -80 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.4 }}
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+      {...headerAnimation}
+      className={[
+        "fixed inset-x-0 top-0 z-50",
+        "border-b transition-all duration-300",
         scrolled
-          ? "border-b border-slate-200/70 bg-white/90 shadow-sm backdrop-blur-xl dark:border-slate-800/70 dark:bg-slate-950/90"
-          : "bg-white/80 backdrop-blur-md dark:bg-slate-950/80"
-      }`}
+          ? "border-slate-200/80 bg-white/90 shadow-sm backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/90"
+          : "border-transparent bg-white/75 backdrop-blur-md dark:bg-slate-950/75",
+      ].join(" ")}
     >
       <div className="container-custom">
-        <div className="flex h-20 items-center justify-between">
+        <div className="flex h-20 items-center justify-between gap-3">
+
           {/* Logo */}
           <button
             type="button"
             onClick={() => handleNavigation("home")}
-            className="group flex items-center text-[22px] font-bold tracking-tight text-slate-900 dark:text-white"
-            aria-label="Go to home"
+            aria-label="Go to home section"
+            className="group inline-flex shrink-0 items-center rounded-lg text-lg font-bold tracking-tight text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 sm:text-xl dark:text-white"
           >
-            <span>Chayma</span>
-            <span className="ml-1 font-light text-slate-500">Mighri</span>
+            <span className="transition-colors duration-200 group-hover:text-emerald-700 dark:group-hover:text-emerald-400">
+              Chayma
+            </span>
 
-            <motion.span
-              whileHover={{ scale: 1.3, rotate: 180 }}
-              transition={{
-                type: "spring",
-                stiffness: 400,
-                damping: 15,
-              }}
-              className="gradient-text ml-1.5"
-            >
-              ✧
-            </motion.span>
+            <span className="ml-1 font-normal text-slate-500 dark:text-slate-400">
+              Mighri
+            </span>
+<motion.span
+  whileHover={
+    shouldReduceMotion
+      ? {}
+      : {
+          scale: 1.25,
+          rotate: 180,
+        }
+  }
+  transition={{
+    type: "spring",
+    stiffness: 350,
+    damping: 15,
+  }}
+  aria-hidden="true"
+  className="gradient-text ml-1.5 inline-block cursor-default text-xl"
+>
+  ✧
+</motion.span>
           </button>
 
-          {/* Navigation desktop */}
+          {/* Desktop navigation */}
           <nav
             aria-label="Main navigation"
-            className="hidden items-center gap-1 lg:flex"
+            className="hidden items-center gap-0.5 lg:flex xl:gap-1"
           >
             {links.map((link) => {
               const isActive = activeSection === link.id;
@@ -164,23 +245,24 @@ export default function Navbar() {
                   type="button"
                   onClick={() => handleNavigation(link.id)}
                   aria-current={isActive ? "location" : undefined}
-                  className={`relative px-3 py-2.5 text-sm font-medium transition-colors duration-300 ${
-                    isActive
-                      ? "text-emerald-600 dark:text-emerald-400"
-                      : "text-slate-600 hover:text-emerald-600 dark:text-slate-300 dark:hover:text-emerald-400"
-                  }`}
+                  className={getLinkClass(isActive)}
                 >
                   {link.label}
 
                   {isActive && (
                     <motion.span
-                      layoutId="active-nav"
-                      className="absolute bottom-0 left-1/2 h-0.5 w-6 -translate-x-1/2 rounded-full bg-emerald-500"
-                      transition={{
-                        type: "spring",
-                        stiffness: 380,
-                        damping: 30,
-                      }}
+                      layoutId="active-nav-indicator"
+                      aria-hidden="true"
+                      className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-emerald-500"
+                      transition={
+                        shouldReduceMotion
+                          ? { duration: 0 }
+                          : {
+                              type: "spring",
+                              stiffness: 380,
+                              damping: 30,
+                            }
+                      }
                     />
                   )}
                 </button>
@@ -188,39 +270,43 @@ export default function Navbar() {
             })}
           </nav>
 
-          {/* Actions desktop */}
-          <div className="hidden items-center gap-3 lg:flex">
+          {/* Desktop actions */}
+          <div className="hidden shrink-0 items-center gap-3 lg:flex">
             <ThemeToggle />
 
             <a
-              href="/CV-Chayma-Mighri.pdf"
+              href={CV_PATH}
               download
-              className="inline-flex items-center gap-2 rounded-full border border-emerald-500 px-5 py-2.5 text-sm font-semibold text-emerald-600 transition-all duration-300 hover:-translate-y-0.5 hover:bg-emerald-500 hover:text-white hover:shadow-lg hover:shadow-emerald-500/20"
+              className="inline-flex items-center gap-2 rounded-full border border-emerald-600 px-4 py-2.5 text-sm font-semibold text-emerald-700 transition-colors duration-200 hover:bg-emerald-600 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:border-emerald-500 dark:text-emerald-400 dark:hover:bg-emerald-500 dark:hover:text-white dark:focus-visible:ring-offset-slate-950"
             >
-              <Download size={16} />
+              <Download size={16} aria-hidden="true" />
               Download CV
             </a>
           </div>
 
-          {/* Bouton menu mobile */}
+          {/* Mobile menu button */}
           <button
             type="button"
             onClick={() => setMobileOpen((open) => !open)}
-            className="rounded-xl border border-slate-200 p-2.5 text-slate-700 transition hover:border-emerald-300 hover:text-emerald-600 dark:border-slate-700 dark:text-slate-300 dark:hover:border-emerald-500 dark:hover:text-emerald-400 lg:hidden"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
             aria-controls="mobile-navigation"
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 text-slate-700 transition-colors hover:border-emerald-400 hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 lg:hidden dark:border-slate-700 dark:text-slate-200 dark:hover:border-emerald-500 dark:hover:text-emerald-400"
           >
-            {mobileOpen ? <X size={21} /> : <Menu size={21} />}
+            {mobileOpen ? (
+              <X size={21} aria-hidden="true" />
+            ) : (
+              <Menu size={21} aria-hidden="true" />
+            )}
           </button>
         </div>
       </div>
 
-      {/* Navigation mobile */}
+      {/* Mobile navigation */}
       <AnimatePresence>
         {mobileOpen && (
           <>
-            {/* Fond cliquable — opacité renforcée pour meilleure lisibilité */}
+            {/* Backdrop */}
             <motion.button
               key="mobile-backdrop"
               type="button"
@@ -228,19 +314,19 @@ export default function Navbar() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.18 }}
+              transition={{
+                duration: shouldReduceMotion ? 0 : 0.18,
+              }}
               onClick={() => setMobileOpen(false)}
-              className="fixed inset-0 top-20 z-40 bg-slate-950/50 backdrop-blur-sm lg:hidden"
+              className="fixed inset-x-0 bottom-0 top-20 z-40 bg-slate-950/40 backdrop-blur-sm lg:hidden"
             />
 
+            {/* Menu panel */}
             <motion.div
               key="mobile-panel"
               id="mobile-navigation"
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.2 }}
-              className="absolute inset-x-0 top-full z-50 max-h-[calc(100dvh-5rem)] overflow-y-auto border-t border-slate-200 bg-white shadow-xl dark:border-slate-800 dark:bg-slate-950 lg:hidden"
+              {...mobilePanelAnimation}
+              className="absolute inset-x-0 top-full z-50 max-h-[calc(100dvh-5rem)] overflow-y-auto border-t border-slate-200 bg-white shadow-xl lg:hidden dark:border-slate-800 dark:bg-slate-950"
             >
               <nav
                 aria-label="Mobile navigation"
@@ -255,18 +341,21 @@ export default function Navbar() {
                       type="button"
                       onClick={() => handleNavigation(link.id)}
                       aria-current={isActive ? "location" : undefined}
-                      className={linkClass(isActive)}
+                      className={mobileLinkClass(isActive)}
                     >
                       {link.label}
 
                       {isActive && (
-                        <span className="absolute left-1 top-1/2 h-5 w-1 -translate-y-1/2 rounded-full bg-emerald-500" />
+                        <span
+                          aria-hidden="true"
+                          className="absolute bottom-2 left-1 top-2 w-1 rounded-full bg-emerald-500"
+                        />
                       )}
                     </button>
                   );
                 })}
 
-                {/* Apparence et thème */}
+                {/* Appearance */}
                 <div className="mt-3 flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3 dark:bg-slate-900">
                   <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
                     Appearance
@@ -275,14 +364,14 @@ export default function Navbar() {
                   <ThemeToggle />
                 </div>
 
-                {/* CV mobile */}
+                {/* Mobile CV button */}
                 <a
-                  href="/CV-Chayma-Mighri.pdf"
+                  href={CV_PATH}
                   download
                   onClick={() => setMobileOpen(false)}
-                  className="mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-600"
+                  className="mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950"
                 >
-                  <Download size={16} />
+                  <Download size={16} aria-hidden="true" />
                   Download CV
                 </a>
               </nav>

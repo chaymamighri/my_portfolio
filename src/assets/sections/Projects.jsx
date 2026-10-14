@@ -1,7 +1,12 @@
+
 import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { motion } from "motion/react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ExternalLink,
+} from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
 import SectionTitle from "../components/SectionTitle";
 
 const projects = [
@@ -9,11 +14,11 @@ const projects = [
     title: "InVera ERP",
     category: "Full Stack · ERP · SaaS",
     description:
-      "Cloud ERP solution for PMEs covering sales, purchases, suppliers, stock, e-invoicing, intelligent assistant and notifications.",
+      "Cloud-based multi-tenant ERP solution for SMEs, featuring sales, purchasing, supplier management, inventory tracking, electronic invoicing, intelligent notifications, and an AI-powered assistant, with a complementary Flutter mobile application.",
     images: [
       "/projects/invera/invera.png",
       "/projects/invera/invera1.png",
-       "/projects/invera/inveraLog.png",
+      "/projects/invera/inveraLog.png",
       "/projects/invera/invera2.png",
       "/projects/invera/invera3.png",
       "/projects/invera/invera4.png",
@@ -26,99 +31,113 @@ const projects = [
       "JWT",
       "OpenRouter",
     ],
-    github: "https://github.com/chaymamighri/InVera.git",
+   /* github: "https://github.com/chaymamighri/InVera.git",*/
   },
   {
     title: "Medical Appointment Management",
     category: "Full Stack · MERN",
     description:
-      "A web application designed to manage patients and appointments while replacing paper-based processes.",
+      "A web application designed to digitize medical office workflows, manage patient records and appointments, and simplify scheduling for doctors and secretaries.",
     images: [
       "/projects/medical_office/medical1.png",
       "/projects/medical_office/medical2.png",
       "/projects/medical_office/medical3.png",
     ],
     technologies: ["React", "Node.js", "Express.js", "MongoDB", "JWT"],
-    github: "https://github.com/chaymamighri/gestion_RendezVous_medicale.git",
+    github:
+      "https://github.com/chaymamighri/gestion_RendezVous_medicale.git",
   },
- {
-  title: "AlloMaison — Home Services App",
-  category: "Mobile Application · Flutter",
-  description:
-    "Mobile application developed with Flutter that allows users to browse and book home services such as plumbing, electricity, cleaning, painting, gardening, and babysitting. Includes administration features for managing providers, services, and reservations.",
-  images: [
-    "/projects/alloMaison/AlloMaison.png",
-    "/projects/alloMaison/AlloMaison1.png",
-    "/projects/alloMaison/AlloMaison2.png",
-    "/projects/alloMaison/AlloMaison3.png",
-    "/projects/alloMaison/AlloMaison4.png",
-  ],
-  technologies: [
-    "Flutter",
-    "Dart",
-    "PHP",
-    "MySQL",
-    "REST API",
-  ],
-  github: "https://github.com/chaymamighri/services_domicile.git",
-},
+  {
+    title: "AlloMaison — Home Services App",
+    category: "Mobile Application · Flutter",
+    description:
+      "Mobile application developed with Flutter that allows users to browse and book home services such as plumbing, electricity, cleaning, painting, gardening, and babysitting. Includes administration features for managing providers, services, and reservations.",
+    images: [
+      "/projects/alloMaison/AlloMaison.png",
+      "/projects/alloMaison/AlloMaison1.png",
+      "/projects/alloMaison/AlloMaison2.png",
+      "/projects/alloMaison/AlloMaison3.png",
+      "/projects/alloMaison/AlloMaison4.png",
+    ],
+    technologies: ["Flutter", "Dart", "PHP", "MySQL", "REST API"],
+    github: "https://github.com/chaymamighri/services_domicile.git",
+  },
 ];
 
-// Carrousel d'images (sans badge)
-function ImageCarousel({ images, title }) {
+function ImageCarousel({ images, title, reduceMotion }) {
   const [current, setCurrent] = useState(0);
   const total = images.length;
 
-  const next = () => setCurrent((prev) => (prev + 1) % total);
-  const prev = () => setCurrent((prev) => (prev - 1 + total) % total);
+  const next = () => {
+    setCurrent((previous) => (previous + 1) % total);
+  };
+
+  const prev = () => {
+    setCurrent((previous) => (previous - 1 + total) % total);
+  };
 
   return (
-    <div className="relative aspect-video w-full bg-slate-100 p-3 dark:bg-slate-800/50">
-      {/* 📸 Cadre autour du screenshot */}
-      <div className="relative h-full w-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-inner dark:border-slate-700 dark:bg-slate-900">
+    <div className="relative w-full bg-slate-50/80 p-3 dark:bg-slate-950/60 sm:p-4">
+      {/* Screenshot frame */}
+      <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm dark:border-slate-700/80 dark:bg-slate-900">
         <img
           src={images[current]}
-          alt={`${title} - aperçu ${current + 1}`}
-          className="absolute inset-0 h-full w-full object-contain"
+          alt={`${title} — screenshot ${current + 1} of ${total}`}
+          className={`absolute inset-0 h-full w-full object-contain ${
+            reduceMotion
+              ? ""
+              : "transition-transform duration-500 ease-out group-hover:scale-[1.015]"
+          }`}
           loading="lazy"
         />
 
-        {/* Flèches */}
+        {/* Image counter */}
+        {total > 1 && (
+          <span className="absolute right-3 top-3 z-10 rounded-full border border-white/60 bg-white/90 px-2.5 py-1 text-xs font-medium tabular-nums text-slate-700 shadow-sm backdrop-blur-sm dark:border-slate-700 dark:bg-slate-900/90 dark:text-slate-200">
+            {current + 1} / {total}
+          </span>
+        )}
+
+        {/* Previous / next controls */}
         {total > 1 && (
           <>
             <button
               type="button"
               onClick={prev}
-              aria-label="Image précédente"
-              className="absolute left-2 top-1/2 z-10 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-white/95 text-slate-900 shadow-md transition hover:bg-white hover:scale-110 dark:bg-slate-900/95 dark:text-white"
+              aria-label={`Previous screenshot of ${title}`}
+              className="absolute left-2 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200/80 bg-white/95 text-slate-800 shadow-md transition-colors duration-200 hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900/95 dark:text-white dark:hover:border-emerald-700 dark:hover:bg-emerald-950/80 dark:hover:text-emerald-400"
             >
-              <ChevronLeft size={16} />
+              <ChevronLeft size={18} />
             </button>
 
             <button
               type="button"
               onClick={next}
-              aria-label="Image suivante"
-              className="absolute right-2 top-1/2 z-10 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-white/95 text-slate-900 shadow-md transition hover:bg-white hover:scale-110 dark:bg-slate-900/95 dark:text-white"
+              aria-label={`Next screenshot of ${title}`}
+              className="absolute right-2 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200/80 bg-white/95 text-slate-800 shadow-md transition-colors duration-200 hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900/95 dark:text-white dark:hover:border-emerald-700 dark:hover:bg-emerald-950/80 dark:hover:text-emerald-400"
             >
-              <ChevronRight size={16} />
+              <ChevronRight size={18} />
             </button>
           </>
         )}
       </div>
 
-      {/* Points indicateurs — EN DEHORS du cadre image */}
+      {/* Carousel indicators */}
       {total > 1 && (
-        <div className="mt-3 flex justify-center gap-1.5">
-          {images.map((_, i) => (
+        <div
+          className="mt-3 flex items-center justify-center gap-1.5"
+          aria-label="Choose a screenshot"
+        >
+          {images.map((image, index) => (
             <button
-              key={i}
+              key={image}
               type="button"
-              onClick={() => setCurrent(i)}
-              aria-label={`Image ${i + 1}`}
-              className={`h-1.5 rounded-full transition-all ${
-                i === current
-                  ? "w-5 bg-emerald-600 dark:bg-emerald-400"
+              onClick={() => setCurrent(index)}
+              aria-label={`Show screenshot ${index + 1} of ${title}`}
+              aria-current={current === index ? "true" : undefined}
+              className={`h-1.5 rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 ${
+                current === index
+                  ? "w-6 bg-emerald-600 dark:bg-emerald-400"
                   : "w-1.5 bg-slate-300 hover:bg-slate-400 dark:bg-slate-600 dark:hover:bg-slate-500"
               }`}
             />
@@ -128,12 +147,25 @@ function ImageCarousel({ images, title }) {
     </div>
   );
 }
+
 export default function Projects() {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <section
       id="projects"
-      className="section-padding bg-slate-50/70 dark:bg-slate-950"
+      className="section-padding relative isolate overflow-hidden bg-slate-50/70 dark:bg-slate-950"
     >
+      {/* Subtle background decoration */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+      >
+        <div className="absolute -left-32 top-24 h-72 w-72 rounded-full bg-emerald-300/10 blur-3xl dark:bg-emerald-500/5" />
+
+        <div className="absolute -right-32 bottom-0 h-72 w-72 rounded-full bg-teal-300/10 blur-3xl dark:bg-teal-500/5" />
+      </div>
+
       <div className="container-custom">
         <SectionTitle
           eyebrow="Projects"
@@ -141,63 +173,91 @@ export default function Projects() {
           description="Projects that demonstrate my experience in web, backend, mobile and business applications."
         />
 
-        <div className="grid gap-7 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid items-stretch gap-7 md:grid-cols-2 lg:grid-cols-3">
           {projects.map((project, index) => (
             <motion.article
               key={project.title}
-              initial={{ opacity: 0, y: 35 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.55, delay: index * 0.1 }}
-              whileHover={{ y: -6 }}
-              className="group flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-shadow duration-300 hover:shadow-xl hover:shadow-slate-200/60 dark:border-slate-800 dark:bg-slate-900 dark:hover:shadow-slate-950/60"
+              initial={{
+                opacity: 0,
+                y: shouldReduceMotion ? 0 : 24,
+              }}
+              whileInView={{
+                opacity: 1,
+                y: 0,
+              }}
+              viewport={{ once: true, amount: 0.1 }}
+              transition={{
+                duration: shouldReduceMotion ? 0 : 0.5,
+                delay: shouldReduceMotion ? 0 : index * 0.1,
+                ease: "easeOut",
+              }}
+              whileHover={
+                shouldReduceMotion
+                  ? undefined
+                  : {
+                      y: -5,
+                      transition: { duration: 0.2 },
+                    }
+              }
+              className="group relative flex h-full flex-col rounded-3xl p-px"
             >
-              {/* 🎠 Carrousel */}
-              <ImageCarousel
-                images={project.images}
-                title={project.title}
+              {/* Gradient border */}
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 rounded-3xl bg-gradient-to-br from-emerald-400/40 via-teal-400/15 to-cyan-400/30 opacity-70 transition-opacity duration-300 group-hover:opacity-100"
               />
 
-              {/* Contenu */}
-              <div className="flex flex-1 flex-col p-6">
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-                  {project.category}
-                </p>
+              {/* Card content */}
+              <div className="relative flex h-full flex-col overflow-hidden rounded-[calc(1.5rem-1px)] border border-slate-200/70 bg-white/95 shadow-sm transition-shadow duration-300 group-hover:shadow-xl group-hover:shadow-emerald-900/5 dark:border-slate-800/80 dark:bg-slate-900/95 dark:group-hover:shadow-emerald-500/5">
+                <ImageCarousel
+                  images={project.images}
+                  title={project.title}
+                  reduceMotion={shouldReduceMotion}
+                />
 
-                <h3 className="mt-1.5 text-lg font-bold leading-snug text-slate-900 dark:text-white">
-                  {project.title}
-                </h3>
+                {/* Project details */}
+                <div className="flex flex-1 flex-col p-6 sm:p-7">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-emerald-700 dark:text-emerald-400">
+                    {project.category}
+                  </p>
 
-                <p className="mt-2.5 text-sm leading-6 text-slate-500 dark:text-slate-400">
-                  {project.description}
-                </p>
+                  <h3 className="mt-2 text-lg font-bold leading-snug tracking-tight text-slate-900 dark:text-white">
+                    {project.title}
+                  </h3>
 
-                {/* Technologies */}
-                <div className="mt-4 flex flex-wrap gap-1.5">
-                  {project.technologies.map((technology) => (
-                    <span
-                      key={technology}
-                      className="rounded-md bg-slate-100 px-2 py-1 text-[11px] font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300"
-                    >
-                      {technology}
-                    </span>
-                  ))}
-                </div>
+                  <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-400">
+                    {project.description}
+                  </p>
 
-                {/* GitHub */}
-                {project.github && (
-                  <div className="mt-auto pt-5">
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-emerald-600 dark:bg-slate-800 dark:hover:bg-emerald-600"
-                    >
-                      <FaGithub size={15} />
-                      Code
-                    </a>
+                  {/* Technologies */}
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    {project.technologies.map((technology) => (
+                      <span
+                        key={technology}
+                        className="rounded-lg border border-slate-200/80 bg-slate-50 px-2.5 py-1.5 text-xs font-medium text-slate-600 transition-colors duration-200 hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-800 dark:border-slate-700 dark:bg-slate-800/80 dark:text-slate-300 dark:hover:border-emerald-800 dark:hover:bg-emerald-950/50 dark:hover:text-emerald-300"
+                      >
+                        {technology}
+                      </span>
+                    ))}
                   </div>
-                )}
+
+                  {/* GitHub link */}
+                  {project.github && (
+                    <div className="mt-auto pt-6">
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`View ${project.title} source code on GitHub`}
+                        className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-colors duration-200 hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-emerald-700 dark:hover:bg-emerald-950/60 dark:hover:text-emerald-300 dark:focus-visible:ring-offset-slate-900"
+                      >
+                        <FaGithub size={16} />
+                        View source code
+                        <ExternalLink size={14} />
+                      </a>
+                    </div>
+                  )}
+                </div>
               </div>
             </motion.article>
           ))}

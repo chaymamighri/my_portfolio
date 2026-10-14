@@ -1,10 +1,11 @@
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ArrowDownLeft } from "lucide-react";
 
 export default function Button({
   children,
   href,
   variant = "primary",
   icon = true,
+  iconType = "default",
   className = "",
 }) {
   const baseStyles =
@@ -24,13 +25,19 @@ export default function Button({
       "bg-slate-900 text-white hover:-translate-y-1 hover:bg-emerald-600",
   };
 
-  const content = (
-    <>
-      <span>{children}</span>
+ const content = (
+  <>
+    <span>{children}</span>
 
-      {icon && <ArrowUpRight size={17} />}
-    </>
-  );
+    {icon && (
+      iconType === "ArrowDownLeft" ? (
+        <ArrowDownLeft size={17} />
+      ) : (
+        <ArrowUpRight size={17} />
+      )
+    )}
+  </>
+);
 
   if (href) {
     return (
