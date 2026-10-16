@@ -37,31 +37,19 @@ export default function Footer() {
 
       <div className="container-custom flex flex-col items-center justify-between gap-5 py-7 sm:py-8 md:flex-row">
 
-        {/* Copyright */}
-        <p className="text-center text-sm leading-relaxed text-slate-500 dark:text-slate-400 md:text-left">
-          © {new Date().getFullYear()}{" "}
-          <span className="font-semibold text-slate-900 dark:text-white">
-            Chayma Mighri
-          </span>
+    
+<p className="text-center text-sm leading-relaxed text-slate-500 dark:text-slate-400 md:text-left">
+  © {new Date().getFullYear()}{" "}
+  <span className="font-semibold text-slate-900 dark:text-white">
+    Chayma Mighri
+  </span>
 
-          <motion.span
-            aria-hidden="true"
-            whileHover={shouldReduceMotion ? undefined : {
-              scale: 1.25,
-              rotate: 90,
-            }}
-            transition={{ type: "spring", stiffness: 350, damping: 15 }}
-            className="gradient-text ml-1 inline-block"
-          >
-            ✧
-          </motion.span>
+  <span className="mx-1.5 text-slate-300 dark:text-slate-700">
+    |
+  </span>
 
-          <span className="mx-1.5 text-slate-300 dark:text-slate-700">
-            |
-          </span>
-
-          <span>All rights reserved.</span>
-        </p>
+  <span>All rights reserved.</span>
+</p>
 
         {/* Social links */}
         <nav

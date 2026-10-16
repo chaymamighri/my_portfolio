@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { motion, useReducedMotion } from "motion/react";
@@ -77,36 +76,34 @@ export default function Hero() {
               Full-Stack Developer · Web & Mobile
             </motion.p>
 
-            {/* Main title */}
-            <motion.h1
-              variants={fadeUp}
-              className="mx-auto max-w-3xl text-4xl font-bold leading-[1.12] tracking-tight text-slate-900 dark:text-white sm:text-5xl md:text-6xl lg:mx-0 lg:text-6xl xl:text-7xl"
-            >
-              Hi, I&apos;m{" "}
-              <span className="gradient-text">Chayma</span>{" "}
-              <span className="font-medium text-slate-600 dark:text-slate-300">
-                Mighri.
-              </span>{" "}
-              <motion.span
-                whileHover={
-                  shouldReduceMotion
-                    ? {}
-                    : {
-                        scale: 1.25,
-                        rotate: 180,
-                      }
-                }
-                transition={{
-                  type: "spring",
-                  stiffness: 350,
-                  damping: 15,
-                }}
-                className="gradient-text ml-1 inline-block cursor-default"
-                aria-hidden="true"
-              >
-                ✧
-              </motion.span>
-            </motion.h1>
+           
+<motion.h1
+  variants={fadeUp}
+  className="mx-auto max-w-3xl text-4xl font-bold leading-[1.12] tracking-tight text-slate-900 dark:text-white sm:text-5xl md:text-6xl lg:mx-0 lg:text-6xl xl:text-7xl"
+>
+  Hi, I&apos;m{" "}
+  <span className="gradient-text">Chayma</span>{" "}
+  <span className="font-medium text-slate-600 dark:text-slate-300">
+    Mighri
+  </span>
+  <motion.span
+    whileHover={
+      shouldReduceMotion
+        ? undefined
+        : { scale: 1.25, rotate: 180 }
+    }
+    transition={{
+      type: "spring",
+      stiffness: 350,
+      damping: 15,
+    }}
+    className="gradient-text ml-2 inline-block cursor-default"
+    aria-hidden="true"
+  >
+    ✧
+  </motion.span>
+</motion.h1>
+
 
             {/* Description */}
             <motion.p

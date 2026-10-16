@@ -196,40 +196,58 @@ export default function Navbar() {
       <div className="container-custom">
         <div className="flex h-20 items-center justify-between gap-3">
 
-          {/* Logo */}
-          <button
-            type="button"
-            onClick={() => handleNavigation("home")}
-            aria-label="Go to home section"
-            className="group inline-flex shrink-0 items-center rounded-lg text-lg font-bold tracking-tight text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 sm:text-xl dark:text-white"
-          >
-            <span className="transition-colors duration-200 group-hover:text-emerald-700 dark:group-hover:text-emerald-400">
-              Chayma
-            </span>
 
-            <span className="ml-1 font-normal text-slate-500 dark:text-slate-400">
-              Mighri
-            </span>
-<motion.span
-  whileHover={
-    shouldReduceMotion
-      ? {}
-      : {
-          scale: 1.25,
-          rotate: 180,
-        }
-  }
-  transition={{
-    type: "spring",
-    stiffness: 350,
-    damping: 15,
-  }}
-  aria-hidden="true"
-  className="gradient-text ml-1.5 inline-block cursor-default text-xl"
+{/* Personal brand logo */}
+<button
+  type="button"
+  onClick={() => handleNavigation("home")}
+  aria-label="Go to home section"
+  className="group inline-flex shrink-0 items-center gap-2.5 rounded-xl text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950"
 >
-  ✧
-</motion.span>
-          </button>
+  {/* Custom CM monogram */}
+  <span
+    aria-hidden="true"
+    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-emerald-700/20 bg-gradient-to-br from-emerald-950 via-teal-900 to-slate-900 shadow-sm transition-all duration-300 group-hover:border-emerald-400/60 group-hover:shadow-md group-hover:shadow-emerald-500/10"
+  >
+    <svg
+      viewBox="0 0 40 40"
+      className="h-9 w-9"
+      fill="none"
+    >
+      {/* C */}
+      <path
+        d="M25.5 10.5 A12 12 0 1 0 25.5 29.5"
+        stroke="#5EEAD4"
+        strokeWidth="2.8"
+        strokeLinecap="round"
+      />
+
+      {/* M */}
+      <path
+        d="M15 27 V17 L21 23 L27 17 V27"
+        stroke="white"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  </span>
+
+  {/* Name */}
+  <span className="flex flex-col">
+    <span className="whitespace-nowrap text-base font-bold tracking-tight text-slate-900 transition-colors duration-200 group-hover:text-emerald-700 dark:text-white dark:group-hover:text-emerald-400 sm:text-lg">
+      Chayma{" "}
+      <span className="font-medium text-slate-500 dark:text-slate-300">
+        Mighri
+      </span>
+    </span>
+
+    <span className="mt-0.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+      Full-Stack Developer
+    </span>
+  </span>
+</button>
+
 
           {/* Desktop navigation */}
           <nav
