@@ -41,7 +41,7 @@ export default function Hero() {
     },
   };
 
-  // Un tour à gauche, une pause, puis un tour à droite.
+  // Rotation de l'étoile : gauche, pause, droite.
   const starAnimation = shouldReduceMotion
     ? { rotate: 0, scale: 1 }
     : {
@@ -62,29 +62,28 @@ export default function Hero() {
         },
       };
 
-  // Flottement et inclinaison subtils de la card.
-  const cardAnimation = shouldReduceMotion
+  // Halo lumineux subtil autour de la card.
+  const glowAnimation = shouldReduceMotion
     ? {}
     : {
-        y: [0, -5, 0, 5, 0],
-        rotate: [0, 1.2, 0, -1.2, 0],
+        opacity: [0.55, 0.85, 0.55],
+        scale: [1, 1.03, 1],
         transition: {
-          duration: 7,
+          duration: 5,
           repeat: Infinity,
           ease: "easeInOut",
         },
       };
 
-  // Halo lumineux doux en arrière-plan.
-  const glowAnimation = shouldReduceMotion
+  // Rotation lente du cadre dégradé.
+  const frameAnimation = shouldReduceMotion
     ? {}
     : {
-        opacity: [0.55, 0.9, 0.55],
-        scale: [1, 1.04, 1],
+        rotate: 360,
         transition: {
-          duration: 5,
+          duration: 18,
           repeat: Infinity,
-          ease: "easeInOut",
+          ease: "linear",
         },
       };
 
@@ -192,7 +191,7 @@ export default function Hero() {
                 Mighri
               </span>
 
-              {/* Star rotation */}
+              {/* Star */}
               <motion.span
                 animate={starAnimation}
                 whileHover={
@@ -355,11 +354,10 @@ export default function Hero() {
             className="flex min-w-0 justify-center
               lg:justify-end"
           >
-            {/* Interactive profile card */}
+            {/* Profile card: no automatic vertical movement */}
             <motion.div
               className="group relative w-full
                 max-w-[340px] sm:max-w-[390px]"
-              animate={cardAnimation}
               whileHover={
                 shouldReduceMotion ? undefined : { scale: 1.015 }
               }
@@ -408,6 +406,7 @@ export default function Hero() {
                     className="relative mx-auto aspect-square
                       w-full max-w-[220px] sm:max-w-[270px]"
                   >
+                    {/* Soft light behind the photo */}
                     <div
                       aria-hidden="true"
                       className="absolute inset-3 rounded-full
@@ -415,9 +414,10 @@ export default function Hero() {
                         dark:bg-emerald-400/10"
                     />
 
-                    {/* Gradient border */}
-                    <div
+                    {/* Rotating gradient frame */}
+                    <motion.div
                       aria-hidden="true"
+                      animate={frameAnimation}
                       className="absolute inset-0 rounded-full
                         bg-[conic-gradient(from_180deg,#10b981,#14b8a6,#06b6d4,#10b981)] p-[3px]"
                     >
@@ -425,9 +425,9 @@ export default function Hero() {
                         className="h-full w-full rounded-full
                           bg-white dark:bg-slate-900"
                       />
-                    </div>
+                    </motion.div>
 
-                    {/* Photo */}
+                    {/* Photo stays stable */}
                     <div
                       className="absolute inset-[7px]
                         overflow-hidden rounded-full
@@ -443,17 +443,17 @@ export default function Hero() {
                           whileHover={
                             shouldReduceMotion
                               ? undefined
-                              : { scale: 1.07 }
+                              : { scale: 1.06 }
                           }
                           whileTap={
                             shouldReduceMotion
                               ? undefined
-                              : { scale: 1.1 }
+                              : { scale: 1.09 }
                           }
                           transition={{
                             type: "spring",
                             stiffness: 300,
-                            damping: 15,
+                            damping: 18,
                           }}
                           className="h-full w-full object-cover"
                           fetchPriority="high"
