@@ -1,12 +1,14 @@
+
 import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 import { motion } from "motion/react";
 
 export default function ThemeToggle() {
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
-    document.documentElement.classList.add("dark");
+    // Mode clair par défaut au chargement
+    document.documentElement.classList.remove("dark");
   }, []);
 
   const toggleTheme = () => {
