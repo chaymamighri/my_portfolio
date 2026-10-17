@@ -14,7 +14,8 @@ export default function Contact() {
   const email = "chaymamighri942@gmail.com";
   const phone = "+216 42 316 275";
 
-  const mailtoUrl = `mailto:${email}`;  const whatsappNumber = phone.replace(/\D/g, "");
+  const mailtoUrl = `mailto:${email}`;
+  const whatsappNumber = phone.replace(/\D/g, "");
   const whatsappUrl = `https://wa.me/${whatsappNumber}`;
 
   const contactItems = [
@@ -23,12 +24,14 @@ export default function Contact() {
       value: email,
       href: mailtoUrl,
       icon: Mail,
+      external: false,
     },
     {
       label: "WhatsApp",
       value: "Contact me on WhatsApp",
       href: whatsappUrl,
       icon: MessageCircle,
+      external: true,
     },
   ];
 
@@ -54,7 +57,6 @@ export default function Contact() {
           sm:-right-32 sm:h-72 sm:w-72"
       />
 
-      {/* Responsive container */}
       <div
         className="relative z-10 mx-auto w-full max-w-6xl
           min-w-0 px-4 sm:px-6 lg:px-8"
@@ -65,15 +67,16 @@ export default function Contact() {
           description="Have a project, an opportunity or simply want to get in touch?"
         />
 
-        {/* Outer gradient border */}
+        {/* Animated outer gradient border */}
         <motion.div
           initial={
-            shouldReduceMotion ? false : { opacity: 0, y: 20 }
+            shouldReduceMotion ? false : { opacity: 0, y: 24 }
           }
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
           transition={{
-            duration: shouldReduceMotion ? 0 : 0.5,
+            duration: shouldReduceMotion ? 0 : 0.55,
+            ease: "easeOut",
           }}
           className="mx-auto mt-8 w-full min-w-0 max-w-5xl
             rounded-2xl bg-gradient-to-br
@@ -87,7 +90,6 @@ export default function Contact() {
               sm:rounded-[23px] sm:p-7
               md:p-9 lg:p-10"
           >
-            {/* One column on mobile, two on desktop */}
             <div
               className="grid min-w-0 grid-cols-1
                 items-start gap-8 sm:gap-10 md:grid-cols-2
@@ -95,9 +97,15 @@ export default function Contact() {
             >
               {/* Introduction */}
               <div className="min-w-0">
-                <span
-                  className="inline-flex max-w-full items-center gap-2
-                    rounded-full border border-emerald-400/20
+                <motion.span
+                  whileTap={
+                    shouldReduceMotion
+                      ? undefined
+                      : { scale: 0.97 }
+                  }
+                  className="inline-flex max-w-full
+                    items-center gap-2 rounded-full
+                    border border-emerald-400/20
                     bg-emerald-400/10 px-3 py-1.5
                     text-[10px] font-semibold uppercase
                     tracking-wider text-emerald-400
@@ -108,7 +116,7 @@ export default function Contact() {
                       bg-emerald-400"
                   />
                   Get in touch
-                </span>
+                </motion.span>
 
                 <h3
                   className="mt-4 break-words text-2xl
@@ -128,19 +136,33 @@ export default function Contact() {
                   Feel free to reach out!
                 </p>
 
-                <a
+                {/* Email CTA */}
+                <motion.a
                   href={mailtoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  whileHover={
+                    shouldReduceMotion
+                      ? undefined
+                      : { y: -3, scale: 1.01 }
+                  }
+                  whileTap={
+                    shouldReduceMotion
+                      ? undefined
+                      : { scale: 0.97, y: 0 }
+                  }
+                  transition={{
+                    type: "spring",
+                    stiffness: 350,
+                    damping: 22,
+                  }}
                   className="mt-6 inline-flex w-full max-w-full
-                    flex-wrap items-center justify-center gap-2
-                    rounded-xl bg-gradient-to-r from-emerald-500
-                    to-teal-500 px-4 py-3 text-center
-                    text-sm font-semibold text-white
-                    shadow-lg shadow-emerald-500/20
-                    transition-all duration-300
-                    hover:-translate-y-0.5
+                    touch-manipulation flex-wrap items-center
+                    justify-center gap-2 rounded-xl
+                    bg-gradient-to-r from-emerald-500 to-teal-500
+                    px-4 py-3 text-center text-sm font-semibold
+                    text-white shadow-lg shadow-emerald-500/20
+                    transition-shadow duration-300
                     hover:shadow-emerald-500/30
+                    active:shadow-emerald-500/40
                     focus-visible:outline-none
                     focus-visible:ring-2 focus-visible:ring-emerald-400
                     focus-visible:ring-offset-2
@@ -158,51 +180,95 @@ export default function Contact() {
                     className="shrink-0"
                     aria-hidden="true"
                   />
-                </a>
+                </motion.a>
               </div>
 
               {/* Contact information */}
               <div className="flex min-w-0 flex-col gap-3 sm:gap-4">
-                {contactItems.map((item) => {
+                {contactItems.map((item, index) => {
                   const Icon = item.icon;
 
                   return (
-                    <a
+                    <motion.a
                       key={item.label}
                       href={item.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      target={item.external ? "_blank" : undefined}
+                      rel={
+                        item.external
+                          ? "noopener noreferrer"
+                          : undefined
+                      }
                       aria-label={
                         item.label === "WhatsApp"
                           ? "Contact me on WhatsApp"
                           : `Send me an email at ${email}`
                       }
+                      initial={
+                        shouldReduceMotion
+                          ? false
+                          : { opacity: 0, x: 16 }
+                      }
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true, amount: 0.2 }}
+                      transition={{
+                        duration: shouldReduceMotion ? 0 : 0.4,
+                        delay: shouldReduceMotion
+                          ? 0
+                          : index * 0.12,
+                      }}
+                      whileHover={
+                        shouldReduceMotion
+                          ? undefined
+                          : { y: -3, x: 2 }
+                      }
+                      whileTap={
+                        shouldReduceMotion
+                          ? undefined
+                          : { scale: 0.98, y: 0, x: 0 }
+                      }
                       className="group/item flex min-w-0
-                        items-center gap-2 rounded-xl
-                        border border-white/10 bg-white/5
-                        p-3 text-white transition-all duration-300
-                        hover:border-emerald-400/30 hover:bg-white/10
+                        touch-manipulation items-center gap-2
+                        rounded-xl border border-white/10
+                        bg-white/5 p-3 text-white
+                        transition-colors duration-300
+                        hover:border-emerald-400/30
+                        hover:bg-white/10
+                        active:border-emerald-400/50
+                        active:bg-white/10
                         sm:gap-3 sm:rounded-2xl sm:p-4
-                        md:hover:-translate-y-1
                         focus-visible:outline-none
                         focus-visible:ring-2
                         focus-visible:ring-emerald-400"
                     >
-                      <span
+                      <motion.span
+                        whileHover={
+                          shouldReduceMotion
+                            ? undefined
+                            : { rotate: -5, scale: 1.06 }
+                        }
+                        whileTap={
+                          shouldReduceMotion
+                            ? undefined
+                            : { scale: 0.9, rotate: 5 }
+                        }
+                        transition={{
+                          type: "spring",
+                          stiffness: 350,
+                          damping: 18,
+                        }}
                         className="flex h-10 w-10 shrink-0
                           items-center justify-center rounded-xl
                           bg-emerald-400/10 text-emerald-400
                           transition-colors duration-300
                           group-hover/item:bg-emerald-400/20
+                          group-active/item:bg-emerald-400/25
                           sm:h-11 sm:w-11"
                       >
                         <Icon size={20} aria-hidden="true" />
-                      </span>
+                      </motion.span>
 
                       <span className="min-w-0 flex-1">
-                        <span
-                          className="block text-xs text-slate-400"
-                        >
+                        <span className="block text-xs text-slate-400">
                           {item.label}
                         </span>
 
@@ -221,28 +287,52 @@ export default function Contact() {
                         className="shrink-0 text-slate-400
                           transition-colors duration-300
                           group-hover/item:text-emerald-400
+                          group-active/item:text-emerald-400
                           sm:h-[18px] sm:w-[18px]"
                         aria-hidden="true"
                       />
-                    </a>
+                    </motion.a>
                   );
                 })}
 
                 {/* Location */}
-                <div
-                  className="flex min-w-0 items-center gap-3
-                    rounded-xl border border-white/10
-                    bg-white/5 p-3 text-white
+                <motion.div
+                  whileHover={
+                    shouldReduceMotion
+                      ? undefined
+                      : { y: -2 }
+                  }
+                  whileTap={
+                    shouldReduceMotion
+                      ? undefined
+                      : { scale: 0.99 }
+                  }
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 22,
+                  }}
+                  className="flex min-w-0 touch-manipulation
+                    items-center gap-3 rounded-xl
+                    border border-white/10 bg-white/5
+                    p-3 text-white transition-colors duration-300
+                    hover:border-emerald-400/20 hover:bg-white/10
+                    active:bg-white/10
                     sm:rounded-2xl sm:p-4"
                 >
-                  <span
+                  <motion.span
+                    whileTap={
+                      shouldReduceMotion
+                        ? undefined
+                        : { scale: 0.9 }
+                    }
                     className="flex h-10 w-10 shrink-0
                       items-center justify-center rounded-xl
                       bg-emerald-400/10 text-emerald-400
                       sm:h-11 sm:w-11"
                   >
                     <MapPin size={20} aria-hidden="true" />
-                  </span>
+                  </motion.span>
 
                   <span className="min-w-0">
                     <span className="block text-xs text-slate-400">
@@ -253,7 +343,7 @@ export default function Contact() {
                       Tunisia
                     </span>
                   </span>
-                </div>
+                </motion.div>
               </div>
             </div>
           </div>

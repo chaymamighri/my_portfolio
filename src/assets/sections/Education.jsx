@@ -1,4 +1,3 @@
-
 import { GraduationCap, CalendarDays, BookOpen } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import SectionTitle from "../components/SectionTitle";
@@ -33,6 +32,17 @@ const education = [
   },
 ];
 
+const cardVariants = {
+  hidden: {
+    opacity: 0,
+    y: 24,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+  },
+};
+
 export default function Education() {
   const shouldReduceMotion = useReducedMotion();
 
@@ -42,7 +52,7 @@ export default function Education() {
       className="section-padding relative overflow-hidden
         bg-slate-50/70 dark:bg-slate-950"
     >
-      {/* Subtle background accents */}
+      {/* Background accents */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -left-32 top-20
@@ -62,55 +72,123 @@ export default function Education() {
           description="My academic journey and the foundations of my technical skills."
         />
 
-        <div className="mx-auto max-w-3xl space-y-6">
-          {education.map((item, index) => (
+        <motion.div
+          className="mx-auto max-w-3xl space-y-6"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.05 }}
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: shouldReduceMotion ? 0 : 0.12,
+              },
+            },
+          }}
+        >
+          {education.map((item) => (
             <motion.article
               key={item.degree}
-              initial={
-                shouldReduceMotion
-                  ? false
-                  : { opacity: 0, y: 22 }
-              }
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
+              variants={cardVariants}
               transition={{
                 duration: shouldReduceMotion ? 0 : 0.5,
-                delay: shouldReduceMotion ? 0 : index * 0.12,
+                ease: "easeOut",
               }}
-              className="group relative rounded-3xl p-px
-                bg-gradient-to-br from-emerald-400/50
-                via-slate-200 to-blue-400/50
+              whileHover={
+                shouldReduceMotion
+                  ? undefined
+                  : {
+                      y: -4,
+                      transition: { duration: 0.25 },
+                    }
+              }
+              whileTap={
+                shouldReduceMotion
+                  ? undefined
+                  : {
+                      scale: 0.99,
+                      transition: { duration: 0.15 },
+                    }
+              }
+              className="group relative rounded-3xl bg-gradient-to-br
+                from-emerald-400/50 via-slate-200 to-blue-400/50
+                p-px touch-manipulation
                 dark:via-slate-800"
             >
+              {/* Card */}
               <div
-                className="relative flex h-full gap-4 rounded-[23px]
-                  border border-white/80 bg-white/95 p-5 shadow-sm
-                  transition-all duration-300
+                className="relative flex h-full gap-4 overflow-hidden
+                  rounded-[23px] border border-white/80
+                  bg-white/95 p-5 shadow-sm
+                  transition-[border-color,box-shadow,background-color]
+                  duration-300
+                  group-hover:border-emerald-200
                   group-hover:shadow-xl
-                  group-hover:shadow-emerald-500/5
-                  dark:border-slate-800/80 dark:bg-slate-900/95
+                  group-hover:shadow-emerald-500/10
+                  group-active:border-emerald-300
+                  group-active:shadow-lg
+                  dark:border-slate-800/80
+                  dark:bg-slate-900/95
+                  dark:group-hover:border-emerald-400/30
                   sm:gap-5 sm:p-7"
               >
-                {/* Education icon */}
+                {/* Subtle card glow */}
                 <div
-                  className="flex h-12 w-12 shrink-0 items-center
-                    justify-center rounded-2xl
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -right-12
+                    -top-12 h-32 w-32 rounded-full
+                    bg-emerald-400/0 blur-3xl
+                    transition-colors duration-300
+                    group-hover:bg-emerald-400/10
+                    group-active:bg-emerald-400/10"
+                />
+
+                {/* Education icon */}
+                <motion.div
+                  whileHover={
+                    shouldReduceMotion
+                      ? undefined
+                      : {
+                          scale: 1.08,
+                          rotate: -3,
+                        }
+                  }
+                  whileTap={
+                    shouldReduceMotion
+                      ? undefined
+                      : {
+                          scale: 0.92,
+                          rotate: 3,
+                        }
+                  }
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 18,
+                  }}
+                  className="relative z-10 flex h-12 w-12 shrink-0
+                    items-center justify-center rounded-2xl
                     border border-emerald-100
                     bg-gradient-to-br from-emerald-50 to-blue-50
-                    text-emerald-600
-                    transition-transform duration-300
-                    group-hover:scale-105
+                    text-emerald-600 shadow-sm
                     dark:border-emerald-400/10
-                    dark:from-emerald-400/10 dark:to-blue-400/10
+                    dark:from-emerald-400/10
+                    dark:to-blue-400/10
                     dark:text-emerald-400"
                 >
                   <GraduationCap size={24} aria-hidden="true" />
-                </div>
+                </motion.div>
 
                 {/* Education details */}
-                <div className="min-w-0 flex-1">
+                <div className="relative z-10 min-w-0 flex-1">
+                  {/* Period and status */}
                   <div className="flex flex-wrap items-center gap-2">
-                    <span
+                    <motion.span
+                      whileTap={
+                        shouldReduceMotion
+                          ? undefined
+                          : { scale: 0.96 }
+                      }
                       className="inline-flex items-center gap-1.5
                         rounded-full border border-emerald-200/70
                         bg-emerald-50 px-3 py-1.5 text-xs
@@ -121,20 +199,26 @@ export default function Education() {
                     >
                       <CalendarDays size={13} aria-hidden="true" />
                       {item.period}
-                    </span>
+                    </motion.span>
 
-                    <span
-                      className={`rounded-full px-3 py-1.5 text-xs
-                        font-medium ${
+                    <motion.span
+                      whileTap={
+                        shouldReduceMotion
+                          ? undefined
+                          : { scale: 0.96 }
+                      }
+                      className={`inline-flex rounded-full px-3 py-1.5
+                        text-xs font-medium transition-colors duration-300 ${
                           item.status === "In Progress"
-                            ? "bg-blue-50 text-blue-700 dark:bg-blue-400/10 dark:text-blue-400"
-                            : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+                            ? "bg-blue-50 text-blue-700 group-hover:bg-blue-100 dark:bg-blue-400/10 dark:text-blue-400 dark:group-hover:bg-blue-400/20"
+                            : "bg-slate-100 text-slate-600 group-hover:bg-emerald-50 group-hover:text-emerald-700 dark:bg-slate-800 dark:text-slate-300 dark:group-hover:bg-emerald-400/10 dark:group-hover:text-emerald-400"
                         }`}
                     >
                       {item.status}
-                    </span>
+                    </motion.span>
                   </div>
 
+                  {/* Degree */}
                   <h3
                     className="mt-3 text-base font-bold leading-relaxed
                       text-slate-900 transition-colors duration-300
@@ -146,7 +230,13 @@ export default function Education() {
                     {item.degree}
                   </h3>
 
-                  <p
+                  {/* School */}
+                  <motion.p
+                    whileTap={
+                      shouldReduceMotion
+                        ? undefined
+                        : { x: 2 }
+                    }
                     className="mt-2 flex items-start gap-2 text-sm
                       font-medium leading-6 text-slate-600
                       dark:text-slate-300"
@@ -158,8 +248,9 @@ export default function Education() {
                       aria-hidden="true"
                     />
                     <span>{item.school}</span>
-                  </p>
+                  </motion.p>
 
+                  {/* Description */}
                   {item.description && (
                     <p
                       className="mt-3 text-sm leading-7
@@ -172,7 +263,7 @@ export default function Education() {
               </div>
             </motion.article>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
