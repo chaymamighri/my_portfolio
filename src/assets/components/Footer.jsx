@@ -1,5 +1,6 @@
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { motion, useReducedMotion } from "motion/react";
+import { ArrowUp } from "lucide-react";
 
 export default function Footer() {
   const shouldReduceMotion = useReducedMotion();
@@ -84,6 +85,28 @@ export default function Footer() {
               />
             </motion.a>
           ))}
+
+          <motion.button
+  type="button"
+  onClick={() =>
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    })
+  }
+  aria-label="Back to top"
+  title="Back to top"
+  whileHover={
+    shouldReduceMotion ? undefined : { y: -3, scale: 1.04 }
+  }
+  whileTap={
+    shouldReduceMotion ? undefined : { scale: 0.96 }
+  }
+  transition={{ duration: 0.2 }}
+  className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-slate-50/80 text-slate-500 shadow-sm transition-colors duration-300 hover:border-emerald-400/60 hover:bg-emerald-50 hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400 dark:hover:border-emerald-500/50 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-400 dark:focus-visible:ring-offset-slate-950"
+>
+  <ArrowUp size={18} aria-hidden="true" />
+</motion.button>
         </nav>
       </div>
     </motion.footer>
