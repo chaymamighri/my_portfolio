@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { motion, useReducedMotion } from "motion/react";
@@ -41,7 +40,7 @@ export default function Hero() {
     },
   };
 
-  // Rotation de l'étoile : gauche, pause, droite.
+  // Animation automatique de l'étoile.
   const starAnimation = shouldReduceMotion
     ? { rotate: 0, scale: 1 }
     : {
@@ -62,7 +61,7 @@ export default function Hero() {
         },
       };
 
-  // Halo lumineux subtil autour de la card.
+  // Halo lumineux autour de la carte.
   const glowAnimation = shouldReduceMotion
     ? {}
     : {
@@ -75,13 +74,26 @@ export default function Hero() {
         },
       };
 
-  // Rotation lente du cadre dégradé.
+  // Halo pulsant derrière la photo, sans déplacer le portrait.
+  const photoGlowAnimation = shouldReduceMotion
+    ? { opacity: 0.2, scale: 1 }
+    : {
+        opacity: [0.2, 0.55, 0.2],
+        scale: [0.95, 1.08, 0.95],
+        transition: {
+          duration: 3.5,
+          repeat: Infinity,
+          ease: "easeInOut",
+        },
+      };
+
+  // Rotation indépendante du cadre dégradé.
   const frameAnimation = shouldReduceMotion
     ? {}
     : {
         rotate: 360,
         transition: {
-          duration: 18,
+          duration: 10,
           repeat: Infinity,
           ease: "linear",
         },
@@ -191,7 +203,7 @@ export default function Hero() {
                 Mighri
               </span>
 
-              {/* Star */}
+              {/* Animated star */}
               <motion.span
                 animate={starAnimation}
                 whileHover={
@@ -406,12 +418,13 @@ export default function Hero() {
                     className="relative mx-auto aspect-square
                       w-full max-w-[220px] sm:max-w-[270px]"
                   >
-                    {/* Soft light behind the photo */}
-                    <div
+                    {/* Pulsating glow behind the photo */}
+                    <motion.div
                       aria-hidden="true"
-                      className="absolute inset-3 rounded-full
-                        bg-emerald-400/20 blur-2xl
-                        dark:bg-emerald-400/10"
+                      animate={photoGlowAnimation}
+                      className="pointer-events-none absolute inset-3
+                        rounded-full bg-emerald-400/30 blur-2xl
+                        dark:bg-emerald-400/20"
                     />
 
                     {/* Rotating gradient frame */}
@@ -501,6 +514,7 @@ export default function Hero() {
                           ease: "easeInOut",
                         }}
                       />
+
                       Available for work
                     </div>
 

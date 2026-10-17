@@ -1,4 +1,5 @@
 
+import { useState, useEffect } from "react";
 import { Code2, Layers3, Smartphone } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import SectionTitle from "../components/SectionTitle";
@@ -23,6 +24,24 @@ const cards = [
 
 export default function About() {
   const shouldReduceMotion = useReducedMotion();
+  const [activeCard, setActiveCard] = useState(null);
+
+  // Remove the selected state when the user taps outside the cards.
+  useEffect(() => {
+    if (activeCard === null) return;
+
+    const handlePointerDown = (event) => {
+      if (!event.target.closest("[data-about-card]")) {
+        setActiveCard(null);
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, [activeCard]);
 
   return (
     <section
@@ -49,10 +68,30 @@ export default function About() {
         <div className="grid gap-6 md:grid-cols-3">
           {cards.map((card, index) => {
             const Icon = card.icon;
+            const isActive = activeCard === index;
 
             return (
               <motion.article
                 key={card.title}
+                data-about-card
+                tabIndex={0}
+                onClick={() => {
+                  setActiveCard((current) =>
+                    current === index ? null : index
+                  );
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    setActiveCard((current) =>
+                      current === index ? null : index
+                    );
+                  }
+
+                  if (event.key === "Escape") {
+                    setActiveCard(null);
+                  }
+                }}
                 initial={{
                   opacity: 0,
                   y: shouldReduceMotion ? 0 : 22,
@@ -78,18 +117,56 @@ export default function About() {
                         },
                       }
                 }
-                className="group relative h-full rounded-3xl p-px"
+                whileTap={
+                  shouldReduceMotion
+                    ? undefined
+                    : {
+                        scale: 0.985,
+                        transition: { duration: 0.12 },
+                      }
+                }
+                animate={
+                  isActive && !shouldReduceMotion
+                    ? {
+                        y: -5,
+                        transition: {
+                          duration: 0.2,
+                          ease: "easeOut",
+                        },
+                      }
+                    : undefined
+                }
+                aria-pressed={isActive}
+                className={`group relative h-full cursor-pointer rounded-3xl p-px outline-none touch-manipulation focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-4 dark:focus-visible:ring-offset-slate-950 ${
+                  isActive ? "z-10" : ""
+                }`}
               >
                 {/* Gradient border */}
                 <div
                   aria-hidden="true"
-                  className="absolute inset-0 rounded-3xl bg-gradient-to-br from-emerald-400/40 via-teal-400/15 to-cyan-400/30 opacity-70 transition-opacity duration-300 group-hover:opacity-100"
+                  className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-emerald-400/40 via-teal-400/15 to-cyan-400/30 transition-all duration-300 ${
+                    isActive
+                      ? "opacity-100"
+                      : "opacity-70 group-hover:opacity-100"
+                  }`}
                 />
 
                 {/* Card content */}
-                <div className="relative flex h-full flex-col rounded-[calc(1.5rem-1px)] border border-slate-200/70 bg-white/95 p-7 shadow-sm transition-all duration-300 group-hover:shadow-xl group-hover:shadow-emerald-900/5 dark:border-slate-800/80 dark:bg-slate-900/95 dark:group-hover:shadow-emerald-500/5 sm:p-8">
+                <div
+                  className={`relative flex h-full flex-col rounded-[calc(1.5rem-1px)] border bg-white/95 p-7 transition-all duration-300 dark:bg-slate-900/95 sm:p-8 ${
+                    isActive
+                      ? "border-emerald-300 shadow-xl shadow-emerald-900/10 dark:border-emerald-700 dark:shadow-emerald-500/10"
+                      : "border-slate-200/70 shadow-sm group-hover:shadow-xl group-hover:shadow-emerald-900/5 dark:border-slate-800/80 dark:group-hover:shadow-emerald-500/5"
+                  }`}
+                >
                   {/* Icon */}
-                  <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-emerald-100 bg-gradient-to-br from-emerald-50 to-teal-50 text-emerald-700 transition-colors duration-300 group-hover:border-emerald-200 dark:border-emerald-900/60 dark:from-emerald-950/60 dark:to-teal-950/40 dark:text-emerald-400 dark:group-hover:border-emerald-700/70">
+                  <div
+                    className={`mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl border bg-gradient-to-br from-emerald-50 to-teal-50 text-emerald-700 transition-all duration-300 dark:from-emerald-950/60 dark:to-teal-950/40 dark:text-emerald-400 ${
+                      isActive
+                        ? "scale-105 border-emerald-300 dark:border-emerald-700"
+                        : "border-emerald-100 group-hover:border-emerald-200 dark:border-emerald-900/60 dark:group-hover:border-emerald-700/70"
+                    }`}
+                  >
                     <Icon size={25} strokeWidth={1.8} />
                   </div>
 
@@ -104,7 +181,11 @@ export default function About() {
                   {/* Decorative accent */}
                   <div
                     aria-hidden="true"
-                    className="mt-6 h-1 w-10 rounded-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-300 group-hover:w-16"
+                    className={`mt-6 h-1 rounded-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-300 ${
+                      isActive
+                        ? "w-16"
+                        : "w-10 group-hover:w-16"
+                    }`}
                   />
                 </div>
               </motion.article>
