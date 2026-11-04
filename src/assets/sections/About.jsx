@@ -1,4 +1,4 @@
-import { Lightbulb, Code2, Rocket, Languages } from "lucide-react";
+import { Lightbulb, Code2, Rocket } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import SectionTitle from "../components/SectionTitle";
 
@@ -18,13 +18,6 @@ const cards = [
     title: "Continuous Learning",
     text: "Motivated to explore new technologies and continuously improve my development skills.",
   },
-];
-
-// ⚠️ Mettez vos vrais niveaux
-const languages = [
-  { name: "Arabic", level: "Native" },
-  { name: "French", level: "Professional" },
-  { name: "English", level: "Professional" },
 ];
 
 export default function About() {
@@ -49,7 +42,7 @@ export default function About() {
         <SectionTitle
           eyebrow="About me"
           title="Turning ideas into practical digital solutions."
-          description="A computer science graduate passionate about full-stack web and mobile development."
+          description="Information Systems Development graduate passionate about full-stack web and mobile development."
         />
 
         {/* Personal introduction */}
@@ -61,7 +54,7 @@ export default function About() {
             duration: shouldReduceMotion ? 0 : 0.5,
             ease: "easeOut",
           }}
-          className="mx-auto mb-8 max-w-3xl text-center sm:mb-10"
+          className="mx-auto mb-12 max-w-3xl text-center sm:mb-14"
         >
           <p className="text-base leading-8 text-slate-600 dark:text-slate-300 sm:text-lg">
             I&apos;m a graduate with a Bachelor&apos;s degree in Information
@@ -77,42 +70,6 @@ export default function About() {
               real-world projects, and continue growing professionally.
             </span>
           </p>
-        </motion.div>
-
-        {/* Languages */}
-        <motion.div
-          initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 18 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{
-            duration: shouldReduceMotion ? 0 : 0.5,
-            delay: shouldReduceMotion ? 0 : 0.1,
-            ease: "easeOut",
-          }}
-          className="mx-auto mb-12 flex max-w-3xl flex-wrap items-center justify-center gap-3 sm:mb-14"
-        >
-          <span className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300">
-            <Languages
-              size={18}
-              className="text-emerald-600 dark:text-emerald-400"
-              aria-hidden="true"
-            />
-            Languages
-          </span>
-
-          {languages.map((language) => (
-            <span
-              key={language.name}
-              className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/90 px-3.5 py-1.5 text-sm shadow-sm dark:border-slate-700 dark:bg-slate-900/90"
-            >
-              <span className="font-semibold text-slate-800 dark:text-white">
-                {language.name}
-              </span>
-              <span className="text-slate-500 dark:text-slate-400">
-                {language.level}
-              </span>
-            </span>
-          ))}
         </motion.div>
 
         {/* Personal qualities */}
