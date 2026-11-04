@@ -12,6 +12,7 @@ import Projects from "./assets/sections/Projects";
 import Experience from "./assets/sections/Experience";
 import Education from "./assets/sections/Education";
 import Contact from "./assets/sections/Contact";
+import BackToTop from "./assets/components/BackToTop";
 
 // true  = l'intro ne s'affiche qu'une fois par session (onglet)
 // false = l'intro s'affiche à chaque chargement de la page
@@ -69,6 +70,7 @@ export default function App() {
           </main>
 
           <Footer />
+          <BackToTop />
         </>
       )}
     </>

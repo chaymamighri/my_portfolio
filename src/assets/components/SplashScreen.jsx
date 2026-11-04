@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { motion, useReducedMotion } from "motion/react";
 
 const DURATION_MS = 3400;
@@ -8,17 +8,21 @@ export default function SplashScreen({ onFinish }) {
   const shouldReduceMotion = useReducedMotion();
   const hasFinished = useRef(false);
 
-  // Lock scrolling during the intro and finish automatically (only once)
+  // Termine l'intro une seule fois (timer automatique ou bouton Skip)
+  const finishSplash = useCallback(() => {
+    if (hasFinished.current) return;
+
+    hasFinished.current = true;
+    onFinish?.();
+  }, [onFinish]);
+
+  // Bloque le scroll pendant l'intro + fin automatique
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
     const timer = setTimeout(
-      () => {
-        if (hasFinished.current) return;
-        hasFinished.current = true;
-        onFinish?.();
-      },
+      finishSplash,
       shouldReduceMotion ? REDUCED_DURATION_MS : DURATION_MS
     );
 
@@ -26,9 +30,9 @@ export default function SplashScreen({ onFinish }) {
       clearTimeout(timer);
       document.body.style.overflow = previousOverflow;
     };
-  }, [shouldReduceMotion, onFinish]);
+  }, [shouldReduceMotion, finishSplash]);
 
-  // Reusable text animation
+  // Animation de texte réutilisable
   const textVariant = (delay) => ({
     initial: { opacity: 0, y: shouldReduceMotion ? 0 : 16 },
     animate: { opacity: 1, y: 0 },
@@ -218,6 +222,21 @@ export default function SplashScreen({ onFinish }) {
           Web &amp; Mobile
         </motion.p>
       </div>
+
+      {/* Skip button */}
+      <motion.button
+        type="button"
+        onClick={finishSplash}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{
+          delay: shouldReduceMotion ? 0 : 1.2,
+          duration: 0.4,
+        }}
+        className="absolute bottom-[max(1.5rem,env(safe-area-inset-bottom))] rounded-full border border-slate-300 bg-white/70 px-4 py-2 text-xs font-medium text-slate-600 backdrop-blur-sm transition-colors hover:border-emerald-500 hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-400 dark:hover:border-emerald-500 dark:hover:text-emerald-400 sm:bottom-8"
+      >
+        Skip
+      </motion.button>
     </motion.div>
   );
 }

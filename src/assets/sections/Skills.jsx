@@ -1,20 +1,42 @@
-
 import { motion, useReducedMotion } from "motion/react";
 import {
   Code2,
   Database,
   Layers3,
   Wrench,
-  Globe,
-  Coffee,
-  FileCode2,
   Smartphone,
-  GitBranch,
   Send,
-  Leaf,
-  Braces,
-  ShieldCheck,
+  Repeat,
 } from "lucide-react";
+
+import {
+  SiReact,
+  SiJavascript,
+  SiTypescript,
+  SiVite,
+  SiReactrouter,
+  SiTailwindcss,
+  SiSpringboot,
+  SiSpring,
+  SiSpringsecurity,
+  SiHibernate,
+  SiNodedotjs,
+  SiExpress,
+  SiJsonwebtokens,
+  SiPostgresql,
+  SiMongodb,
+  SiFlutter,
+  SiDart,
+  SiGit,
+  SiGithub,
+  SiPostman,
+  SiAndroidstudio,
+  SiNpm,
+  SiApachemaven,
+  SiIntellijidea,
+} from "react-icons/si";
+import { FaJava, FaHtml5, FaCss3Alt, FaDatabase } from "react-icons/fa";
+import { VscVscode } from "react-icons/vsc";
 
 import SectionTitle from "../components/SectionTitle";
 
@@ -24,11 +46,18 @@ const skillGroups = [
     subtitle: "Building modern interfaces",
     icon: Layers3,
     skills: [
-      { name: "React.js", icon: Code2, color: "text-cyan-500" },
-      { name: "JavaScript", icon: Braces, color: "text-yellow-500" },
-      { name: "HTML5", icon: Globe, color: "text-orange-500" },
-      { name: "CSS3", icon: FileCode2, color: "text-blue-500" },
-      { name: "Tailwind CSS", icon: Layers3, color: "text-teal-500" },
+      { name: "React.js", icon: SiReact, color: "text-[#61DAFB]" },
+      { name: "TypeScript", icon: SiTypescript, color: "text-[#3178C6]" },
+      { name: "JavaScript", icon: SiJavascript, color: "text-[#F7DF1E]" },
+      { name: "Vite", icon: SiVite, color: "text-[#646CFF]" },
+      {
+        name: "React Router",
+        icon: SiReactrouter,
+        color: "text-[#CA4245]",
+      },
+      { name: "HTML5", icon: FaHtml5, color: "text-[#E34F26]" },
+      { name: "CSS3", icon: FaCss3Alt, color: "text-[#1572B6]" },
+      { name: "Tailwind CSS", icon: SiTailwindcss, color: "text-[#06B6D4]" },
     ],
   },
   {
@@ -36,21 +65,31 @@ const skillGroups = [
     subtitle: "Building reliable APIs",
     icon: Code2,
     skills: [
-      { name: "Java", icon: Coffee, color: "text-red-500" },
-      { name: "Spring Boot", icon: Leaf, color: "text-green-600" },
+      { name: "Java", icon: FaJava, color: "text-[#E76F00]" },
+      { name: "Spring Boot", icon: SiSpringboot, color: "text-[#6DB33F]" },
       {
         name: "Spring Security",
-        icon: ShieldCheck,
-        color: "text-emerald-600",
+        icon: SiSpringsecurity,
+        color: "text-[#6DB33F]",
       },
-      { name: "Node.js", icon: Code2, color: "text-green-500" },
+      {
+        name: "Spring Data JPA",
+        icon: SiSpring,
+        color: "text-[#6DB33F]",
+      },
+      { name: "Hibernate", icon: SiHibernate, color: "text-[#59666C]" },
+      { name: "Node.js", icon: SiNodedotjs, color: "text-[#339933]" },
       {
         name: "Express.js",
-        icon: Send,
-        color: "text-gray-600 dark:text-gray-300",
+        icon: SiExpress,
+        color: "text-slate-800 dark:text-slate-200",
       },
       { name: "REST API", icon: Send, color: "text-violet-500" },
-      { name: "JWT", icon: ShieldCheck, color: "text-pink-500" },
+      {
+        name: "JWT",
+        icon: SiJsonwebtokens,
+        color: "text-slate-800 dark:text-pink-400",
+      },
     ],
   },
   {
@@ -58,9 +97,9 @@ const skillGroups = [
     subtitle: "Managing application data",
     icon: Database,
     skills: [
-      { name: "PostgreSQL", icon: Database, color: "text-sky-600" },
-      { name: "MongoDB", icon: Database, color: "text-green-600" },
-      { name: "SQL", icon: FileCode2, color: "text-indigo-500" },
+      { name: "PostgreSQL", icon: SiPostgresql, color: "text-[#4169E1]" },
+      { name: "MongoDB", icon: SiMongodb, color: "text-[#47A248]" },
+      { name: "SQL", icon: FaDatabase, color: "text-indigo-500" },
     ],
   },
   {
@@ -68,27 +107,36 @@ const skillGroups = [
     subtitle: "Building cross-platform applications",
     icon: Smartphone,
     skills: [
-      { name: "Flutter", icon: Smartphone, color: "text-sky-500" },
-      { name: "Dart", icon: Code2, color: "text-blue-500" },
+      { name: "Flutter", icon: SiFlutter, color: "text-[#02569B]" },
+      { name: "Dart", icon: SiDart, color: "text-[#0175C2]" },
     ],
   },
   {
-    title: "Development Tools",
-    subtitle: "Tools for an efficient workflow",
+    title: "Tools & Methodology",
+    subtitle: "Tools and practices for an efficient workflow",
     icon: Wrench,
     skills: [
-      { name: "VS Code", icon: Code2, color: "text-blue-500" },
-      { name: "IntelliJ IDEA", icon: Coffee, color: "text-red-500" },
-      { name: "Git", icon: GitBranch, color: "text-orange-500" },
+      { name: "VS Code", icon: VscVscode, color: "text-[#007ACC]" },
+      {
+        name: "IntelliJ IDEA",
+        icon: SiIntellijidea,
+        color: "text-slate-800 dark:text-slate-200",
+      },
+      { name: "Git", icon: SiGit, color: "text-[#F05032]" },
       {
         name: "GitHub",
-        icon: GitBranch,
-        color: "text-gray-800 dark:text-white",
+        icon: SiGithub,
+        color: "text-slate-800 dark:text-white",
       },
-      { name: "Postman", icon: Send, color: "text-orange-500" },
-      { name: "Android Studio", icon: Smartphone, color: "text-green-500" },
-      { name: "npm", icon: Code2, color: "text-red-600" },
-      { name: "Maven", icon: Coffee, color: "text-red-700" },
+      { name: "Postman", icon: SiPostman, color: "text-[#FF6C37]" },
+      {
+        name: "Android Studio",
+        icon: SiAndroidstudio,
+        color: "text-[#3DDC84]",
+      },
+      { name: "npm", icon: SiNpm, color: "text-[#CB3837]" },
+      { name: "Maven", icon: SiApachemaven, color: "text-[#C71A36]" },
+      { name: "Agile / Scrum", icon: Repeat, color: "text-emerald-500" },
     ],
   },
 ];
@@ -122,7 +170,6 @@ export default function Skills() {
         className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
       >
         <div className="absolute -right-32 top-20 h-72 w-72 rounded-full bg-emerald-300/10 blur-3xl dark:bg-emerald-500/5" />
-
         <div className="absolute -left-32 bottom-0 h-72 w-72 rounded-full bg-teal-300/10 blur-3xl dark:bg-teal-500/5" />
       </div>
 
@@ -157,17 +204,10 @@ export default function Skills() {
                 whileHover={
                   shouldReduceMotion
                     ? undefined
-                    : {
-                        y: -5,
-                        transition: { duration: 0.22 },
-                      }
+                    : { y: -5, transition: { duration: 0.22 } }
                 }
                 whileTap={
-                  shouldReduceMotion
-                    ? undefined
-                    : {
-                        scale: 0.985,
-                      }
+                  shouldReduceMotion ? undefined : { scale: 0.985 }
                 }
                 className="group relative h-full rounded-3xl p-px"
               >
@@ -195,13 +235,15 @@ export default function Skills() {
                             : { rotate: -5, scale: 1.06 }
                         }
                         whileTap={
-                          shouldReduceMotion
-                            ? undefined
-                            : { scale: 0.92 }
+                          shouldReduceMotion ? undefined : { scale: 0.92 }
                         }
                         className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-emerald-100 bg-gradient-to-br from-emerald-50 to-teal-50 text-emerald-700 transition-colors duration-300 group-hover:border-emerald-200 dark:border-emerald-900/60 dark:from-emerald-950/60 dark:to-teal-950/40 dark:text-emerald-400 dark:group-hover:border-emerald-700/70"
                       >
-                        <GroupIcon size={23} strokeWidth={1.8} />
+                        <GroupIcon
+                          size={23}
+                          strokeWidth={1.8}
+                          aria-hidden="true"
+                        />
                       </motion.div>
 
                       <div>
@@ -227,14 +269,8 @@ export default function Skills() {
                               opacity: 0,
                               y: shouldReduceMotion ? 0 : 12,
                             }}
-                            whileInView={{
-                              opacity: 1,
-                              y: 0,
-                            }}
-                            viewport={{
-                              once: true,
-                              amount: 0.1,
-                            }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, amount: 0.1 }}
                             transition={{
                               duration: shouldReduceMotion ? 0 : 0.35,
                               delay: shouldReduceMotion
@@ -276,7 +312,6 @@ export default function Skills() {
                             >
                               <SkillIcon
                                 size={26}
-                                strokeWidth={1.8}
                                 aria-hidden="true"
                                 className={skill.color}
                               />
