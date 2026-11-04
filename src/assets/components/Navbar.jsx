@@ -1,10 +1,5 @@
-
 import { useEffect, useState } from "react";
-import {
-  AnimatePresence,
-  motion,
-  useReducedMotion,
-} from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Download, Menu, X } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 
@@ -29,19 +24,12 @@ export default function Navbar() {
 
   // Detect page scrolling
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 16);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 16);
 
     handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
-    window.addEventListener("scroll", handleScroll, {
-      passive: true,
-    });
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // Detect the currently visible section
@@ -56,10 +44,7 @@ export default function Navbar() {
       (entries) => {
         const visibleEntries = entries
           .filter((entry) => entry.isIntersecting)
-          .sort(
-            (a, b) =>
-              b.intersectionRatio - a.intersectionRatio
-          );
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
 
         if (visibleEntries.length > 0) {
           setActiveSection(visibleEntries[0].target.id);
@@ -81,9 +66,7 @@ export default function Navbar() {
     if (!mobileOpen) return;
 
     const handleKeyDown = (event) => {
-      if (event.key === "Escape") {
-        setMobileOpen(false);
-      }
+      if (event.key === "Escape") setMobileOpen(false);
     };
 
     const previousOverflow = document.body.style.overflow;
@@ -100,16 +83,12 @@ export default function Navbar() {
   // Close the mobile menu when switching to desktop layout
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1024) {
-        setMobileOpen(false);
-      }
+      if (window.innerWidth >= 1024) setMobileOpen(false);
     };
 
     window.addEventListener("resize", handleResize);
 
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // Navigate to a section
@@ -126,8 +105,7 @@ export default function Navbar() {
     setActiveSection(id);
 
     const headerOffset = 80;
-    const sectionTop =
-      section.getBoundingClientRect().top + window.scrollY;
+    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
 
     window.scrollTo({
       top: Math.max(0, sectionTop - headerOffset),
@@ -140,10 +118,7 @@ export default function Navbar() {
     : {
         initial: { y: -24, opacity: 0 },
         animate: { y: 0, opacity: 1 },
-        transition: {
-          duration: 0.45,
-          ease: "easeOut",
-        },
+        transition: { duration: 0.45, ease: "easeOut" },
       };
 
   const mobilePanelAnimation = shouldReduceMotion
@@ -194,60 +169,52 @@ export default function Navbar() {
       ].join(" ")}
     >
       <div className="container-custom">
-        <div className="flex h-20 items-center justify-between gap-3">
+        <div className="flex h-20 items-center justify-between gap-2 sm:gap-3">
+          {/* Personal brand logo */}
+          <button
+            type="button"
+            onClick={() => handleNavigation("home")}
+            aria-label="Go to home section"
+            className="group inline-flex shrink-0 items-center gap-2.5 rounded-xl text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950"
+          >
+            {/* Custom CM monogram */}
+            <span
+              aria-hidden="true"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-emerald-700/20 bg-gradient-to-br from-emerald-950 via-teal-900 to-slate-900 shadow-sm transition-all duration-300 group-hover:border-emerald-400/60 group-hover:shadow-md group-hover:shadow-emerald-500/10"
+            >
+              <svg viewBox="0 0 40 40" className="h-9 w-9" fill="none">
+                {/* C */}
+                <path
+                  d="M25.5 10.5 A12 12 0 1 0 25.5 29.5"
+                  stroke="#5EEAD4"
+                  strokeWidth="2.8"
+                  strokeLinecap="round"
+                />
+                {/* M */}
+                <path
+                  d="M15 27 V17 L21 23 L27 17 V27"
+                  stroke="white"
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
 
+            {/* Name */}
+            <span className="flex flex-col">
+              <span className="whitespace-nowrap text-base font-bold tracking-tight text-slate-900 transition-colors duration-200 group-hover:text-emerald-700 dark:text-white dark:group-hover:text-emerald-400 sm:text-lg">
+                Chayma{" "}
+                <span className="font-medium text-slate-500 dark:text-slate-300">
+                  Mighri
+                </span>
+              </span>
 
-{/* Personal brand logo */}
-<button
-  type="button"
-  onClick={() => handleNavigation("home")}
-  aria-label="Go to home section"
-  className="group inline-flex shrink-0 items-center gap-2.5 rounded-xl text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950"
->
-  {/* Custom CM monogram */}
-  <span
-    aria-hidden="true"
-    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-emerald-700/20 bg-gradient-to-br from-emerald-950 via-teal-900 to-slate-900 shadow-sm transition-all duration-300 group-hover:border-emerald-400/60 group-hover:shadow-md group-hover:shadow-emerald-500/10"
-  >
-    <svg
-      viewBox="0 0 40 40"
-      className="h-9 w-9"
-      fill="none"
-    >
-      {/* C */}
-      <path
-        d="M25.5 10.5 A12 12 0 1 0 25.5 29.5"
-        stroke="#5EEAD4"
-        strokeWidth="2.8"
-        strokeLinecap="round"
-      />
-
-      {/* M */}
-      <path
-        d="M15 27 V17 L21 23 L27 17 V27"
-        stroke="white"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  </span>
-
-  {/* Name */}
-  <span className="flex flex-col">
-    <span className="whitespace-nowrap text-base font-bold tracking-tight text-slate-900 transition-colors duration-200 group-hover:text-emerald-700 dark:text-white dark:group-hover:text-emerald-400 sm:text-lg">
-      Chayma{" "}
-      <span className="font-medium text-slate-500 dark:text-slate-300">
-        Mighri
-      </span>
-    </span>
-
-    <span className="mt-0.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
-      Full-Stack Developer
-    </span>
-  </span>
-</button>
-
+              <span className="mt-0.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+                Full-Stack Developer
+              </span>
+            </span>
+          </button>
 
           {/* Desktop navigation */}
           <nav
@@ -275,11 +242,7 @@ export default function Navbar() {
                       transition={
                         shouldReduceMotion
                           ? { duration: 0 }
-                          : {
-                              type: "spring",
-                              stiffness: 380,
-                              damping: 30,
-                            }
+                          : { type: "spring", stiffness: 380, damping: 30 }
                       }
                     />
                   )}
@@ -302,21 +265,25 @@ export default function Navbar() {
             </a>
           </div>
 
-          {/* Mobile menu button */}
-          <button
-            type="button"
-            onClick={() => setMobileOpen((open) => !open)}
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
-            aria-expanded={mobileOpen}
-            aria-controls="mobile-navigation"
-            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 text-slate-700 transition-colors hover:border-emerald-400 hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 lg:hidden dark:border-slate-700 dark:text-slate-200 dark:hover:border-emerald-500 dark:hover:text-emerald-400"
-          >
-            {mobileOpen ? (
-              <X size={21} aria-hidden="true" />
-            ) : (
-              <Menu size={21} aria-hidden="true" />
-            )}
-          </button>
+          {/* Mobile actions: theme toggle + menu button */}
+          <div className="flex shrink-0 items-center gap-2 lg:hidden">
+            <ThemeToggle />
+
+            <button
+              type="button"
+              onClick={() => setMobileOpen((open) => !open)}
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileOpen}
+              aria-controls="mobile-navigation"
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 text-slate-700 transition-colors hover:border-emerald-400 hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 dark:border-slate-700 dark:text-slate-200 dark:hover:border-emerald-500 dark:hover:text-emerald-400"
+            >
+              {mobileOpen ? (
+                <X size={21} aria-hidden="true" />
+              ) : (
+                <Menu size={21} aria-hidden="true" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -332,9 +299,7 @@ export default function Navbar() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{
-                duration: shouldReduceMotion ? 0 : 0.18,
-              }}
+              transition={{ duration: shouldReduceMotion ? 0 : 0.18 }}
               onClick={() => setMobileOpen(false)}
               className="fixed inset-x-0 bottom-0 top-20 z-40 bg-slate-950/40 backdrop-blur-sm lg:hidden"
             />
@@ -373,21 +338,12 @@ export default function Navbar() {
                   );
                 })}
 
-                {/* Appearance */}
-                <div className="mt-3 flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3 dark:bg-slate-900">
-                  <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
-                    Appearance
-                  </span>
-
-                  <ThemeToggle />
-                </div>
-
                 {/* Mobile CV button */}
                 <a
                   href={CV_PATH}
                   download
                   onClick={() => setMobileOpen(false)}
-                  className="mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950"
+                  className="mt-3 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950"
                 >
                   <Download size={16} aria-hidden="true" />
                   Download CV
