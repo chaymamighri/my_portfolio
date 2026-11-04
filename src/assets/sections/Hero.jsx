@@ -450,7 +450,7 @@ export default function Hero() {
                     >
                       {!imageError ? (
                         <motion.img
-                          src="/my_photo.png"
+                          src="/chayma.png"
                           alt="Portrait of Chayma Mighri"
                           onError={() => setImageError(true)}
                           whileHover={

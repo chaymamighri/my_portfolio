@@ -58,8 +58,7 @@ export default function About() {
         >
           <p className="text-base leading-8 text-slate-600 dark:text-slate-300 sm:text-lg">
             I&apos;m a graduate with a Bachelor&apos;s degree in Information
-            Systems Development from the Higher Institute of Technological
-            Studies of Kairouan, Tunisia.
+            Systems Development.
             <br />
             <span className="mt-3 inline-block">
               Through academic projects and internship experiences,
