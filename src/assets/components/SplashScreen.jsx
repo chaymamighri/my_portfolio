@@ -1,4 +1,3 @@
-
 import { useEffect, useRef } from "react";
 import { motion, useReducedMotion } from "motion/react";
 
@@ -9,22 +8,17 @@ export default function SplashScreen({ onFinish }) {
   const shouldReduceMotion = useReducedMotion();
   const hasFinished = useRef(false);
 
-  // Finish the splash screen only once
-  const finishSplash = () => {
-    if (hasFinished.current) return;
-
-    hasFinished.current = true;
-    onFinish?.();
-  };
-
-  // Lock scrolling during the intro
+  // Lock scrolling during the intro and finish automatically (only once)
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
-
     document.body.style.overflow = "hidden";
 
     const timer = setTimeout(
-      finishSplash,
+      () => {
+        if (hasFinished.current) return;
+        hasFinished.current = true;
+        onFinish?.();
+      },
       shouldReduceMotion ? REDUCED_DURATION_MS : DURATION_MS
     );
 
@@ -32,18 +26,12 @@ export default function SplashScreen({ onFinish }) {
       clearTimeout(timer);
       document.body.style.overflow = previousOverflow;
     };
-  }, [shouldReduceMotion]);
+  }, [shouldReduceMotion, onFinish]);
 
   // Reusable text animation
   const textVariant = (delay) => ({
-    initial: {
-      opacity: 0,
-      y: shouldReduceMotion ? 0 : 16,
-    },
-    animate: {
-      opacity: 1,
-      y: 0,
-    },
+    initial: { opacity: 0, y: shouldReduceMotion ? 0 : 16 },
+    animate: { opacity: 1, y: 0 },
     transition: {
       duration: shouldReduceMotion ? 0 : 0.6,
       delay: shouldReduceMotion ? 0 : delay,
@@ -56,24 +44,18 @@ export default function SplashScreen({ onFinish }) {
       role="status"
       aria-label="Loading portfolio"
       initial={{ opacity: 1 }}
-      exit={{
-        opacity: 0,
-        scale: shouldReduceMotion ? 1 : 1.04,
-      }}
+      exit={{ opacity: 0, scale: shouldReduceMotion ? 1 : 1.04 }}
       transition={{
         duration: shouldReduceMotion ? 0 : 0.6,
         ease: "easeInOut",
       }}
-      className="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden bg-slate-950 px-4"
+      className="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden bg-white px-4 dark:bg-slate-950"
     >
       {/* Background glow */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-      >
-        <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-emerald-500/15 blur-3xl sm:h-96 sm:w-96" />
-
-        <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-teal-500/15 blur-3xl sm:h-96 sm:w-96" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-emerald-300/25 blur-3xl dark:bg-emerald-500/15 sm:h-96 sm:w-96" />
+        <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-teal-300/25 blur-3xl dark:bg-teal-500/15 sm:h-96 sm:w-96" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.06),transparent_55%)]" />
       </div>
 
       {/* Circular animation */}
@@ -102,17 +84,13 @@ export default function SplashScreen({ onFinish }) {
           <motion.g
             style={{ transformOrigin: "100px 100px" }}
             animate={shouldReduceMotion ? undefined : { rotate: 360 }}
-            transition={{
-              duration: 18,
-              repeat: Infinity,
-              ease: "linear",
-            }}
+            transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
           >
             <circle
               cx="100"
               cy="100"
               r="94"
-              stroke="#334155"
+              className="stroke-slate-300 dark:stroke-slate-700"
               strokeWidth="1"
               strokeDasharray="2 8"
               strokeLinecap="round"
@@ -123,11 +101,7 @@ export default function SplashScreen({ onFinish }) {
           <motion.g
             style={{ transformOrigin: "100px 100px" }}
             animate={shouldReduceMotion ? undefined : { rotate: -360 }}
-            transition={{
-              duration: 6,
-              repeat: Infinity,
-              ease: "linear",
-            }}
+            transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
           >
             <circle
               cx="100"
@@ -146,7 +120,7 @@ export default function SplashScreen({ onFinish }) {
             cx="100"
             cy="100"
             r="70"
-            stroke="#1e293b"
+            className="stroke-slate-200 dark:stroke-slate-800"
             strokeWidth="3"
           />
 
@@ -159,9 +133,7 @@ export default function SplashScreen({ onFinish }) {
               stroke="url(#splash-gradient)"
               strokeWidth="3"
               strokeLinecap="round"
-              initial={{
-                pathLength: shouldReduceMotion ? 1 : 0,
-              }}
+              initial={{ pathLength: shouldReduceMotion ? 1 : 0 }}
               animate={{ pathLength: 1 }}
               transition={{
                 duration: shouldReduceMotion ? 0 : 2.6,
@@ -178,26 +150,16 @@ export default function SplashScreen({ onFinish }) {
             aria-hidden="true"
             className="absolute inset-0"
             animate={{ rotate: 360 }}
-            transition={{
-              duration: 2.6,
-              repeat: Infinity,
-              ease: "linear",
-            }}
+            transition={{ duration: 2.6, repeat: Infinity, ease: "linear" }}
           >
-            <span className="absolute left-1/2 top-[8%] h-2.5 w-2.5 -translate-x-1/2 rounded-full bg-emerald-400 shadow-[0_0_12px_3px_rgba(52,211,153,0.7)]" />
+            <span className="absolute left-1/2 top-[8%] h-2.5 w-2.5 -translate-x-1/2 rounded-full bg-emerald-500 shadow-[0_0_12px_3px_rgba(16,185,129,0.5)] dark:bg-emerald-400 dark:shadow-[0_0_12px_3px_rgba(52,211,153,0.7)]" />
           </motion.div>
         )}
 
         {/* CM monogram */}
         <motion.div
-          initial={{
-            opacity: 0,
-            scale: shouldReduceMotion ? 1 : 0.6,
-          }}
-          animate={{
-            opacity: 1,
-            scale: 1,
-          }}
+          initial={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.6 }}
+          animate={{ opacity: 1, scale: 1 }}
           transition={{
             duration: shouldReduceMotion ? 0 : 0.7,
             delay: shouldReduceMotion ? 0 : 0.3,
@@ -205,7 +167,7 @@ export default function SplashScreen({ onFinish }) {
             stiffness: 200,
             damping: 18,
           }}
-          className="flex h-24 w-24 items-center justify-center rounded-3xl border border-emerald-700/30 bg-gradient-to-br from-emerald-950 via-teal-900 to-slate-900 shadow-lg shadow-emerald-500/10 sm:h-28 sm:w-28"
+          className="flex h-24 w-24 items-center justify-center rounded-3xl border border-emerald-700/30 bg-gradient-to-br from-emerald-950 via-teal-900 to-slate-900 shadow-lg shadow-emerald-500/20 sm:h-28 sm:w-28"
         >
           <svg
             viewBox="0 0 40 40"
@@ -219,7 +181,6 @@ export default function SplashScreen({ onFinish }) {
               strokeWidth="2.8"
               strokeLinecap="round"
             />
-
             <path
               d="M15 27 V17 L21 23 L27 17 V27"
               stroke="white"
@@ -235,43 +196,28 @@ export default function SplashScreen({ onFinish }) {
       <div className="relative mt-8 text-center sm:mt-10">
         <motion.h1
           {...textVariant(0.9)}
-          className="text-3xl font-bold tracking-tight text-white sm:text-5xl"
+          className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-5xl"
         >
           <span className="gradient-text">Chayma</span>{" "}
-          <span className="font-medium text-slate-300">
+          <span className="font-medium text-slate-600 dark:text-slate-300">
             Mighri
           </span>
         </motion.h1>
 
         <motion.p
           {...textVariant(1.3)}
-          className="mt-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-400 sm:text-sm sm:tracking-[0.28em]"
+          className="mt-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-400 sm:text-sm sm:tracking-[0.28em]"
         >
           Full-Stack Developer
         </motion.p>
 
         <motion.p
           {...textVariant(1.6)}
-          className="mt-2 text-xs text-slate-400 sm:text-sm"
+          className="mt-2 text-xs text-slate-500 dark:text-slate-400 sm:text-sm"
         >
           Web &amp; Mobile
         </motion.p>
       </div>
-
-      {/* Skip button */}
-      <motion.button
-        type="button"
-        onClick={finishSplash}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{
-          delay: shouldReduceMotion ? 0 : 1.2,
-          duration: 0.4,
-        }}
-        className="absolute bottom-6 rounded-full border border-slate-700 px-4 py-2 text-xs font-medium text-slate-400 transition-colors hover:border-emerald-500 hover:text-emerald-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 sm:bottom-8"
-      >
-        Skip
-      </motion.button>
     </motion.div>
   );
 }
